@@ -14,7 +14,7 @@
 #include <fstream>
 #include "BandB.h"
 #include "Parser.h"
-#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct2.txt"
+#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct1.txt"
 
 using namespace std;
 
@@ -41,10 +41,15 @@ int main(int argc, char** argv) {
     for (i = 0; i<numOfBlocks; i++){
         order[i] = i+1;
     }
-    int* left = new int[numOfBlocks/2];
-    int* right = new int[numOfBlocks/2];
+    int* left_best = new int[numOfBlocks/2];
+    int* right_best = new int[numOfBlocks/2];
     sorting (Blocks, &order);
-    InitialSol(Nets,&left, &right, numOfBlocks, numNets);
+    for(i = 0; 1<numOfBlocks; i++){
+        int numberOfNet = Blocks[order[i]-1].GetNumOfNets();
+        cout<<order[i]<<"::"<<numberOfNet<<endl;
+    }
+    InitialSol(Nets,&left_best, &right_best, numOfBlocks, numNets);
+    int lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     
     return 0;
 }

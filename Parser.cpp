@@ -82,7 +82,7 @@ int doParse(char* FILENAME, vector<block>* Blocks, Net** Nets, int* numberOfNets
         int size = NetNumTemp->size();
         (*Blocks)[h].setnetnums(size);
         for (int g = 0; g < NetNumTemp->size(); g++){
-            //(*Nets)[(*NetNumTemp)[g]-1].incrementNumPins();
+            (*Nets)[(*NetNumTemp)[g]-1].incrementNumPins();
             (*Nets)[(*NetNumTemp)[g]-1].getBlockNums()->push_back((*Blocks)[h].getBlockNum());
         }
     }

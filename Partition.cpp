@@ -66,3 +66,30 @@ void InitialSol(Net* nets, int** left, int** right, int numOfBlocks, int numNets
 }
 /// got initial solution ////
 
+//// to get the lower bound for initial solution.////
+int lowerBound_initial(Net* nets, int* left, int* right, int numNets, int numOfBlocks){
+    int lb = 0;
+    for (int i = 0; i < numNets; i++) {
+        int leftcount = 0;
+        int rightcount = 0;
+        vector<int>* blocknums = nets[i].getBlockNums();
+        for(int k = 0; k<blocknums->size(); k++){
+            for(int j = 0; j<numOfBlocks/2; j++){
+                if((*blocknums)[k]== left[j]){
+                    leftcount++;
+                }
+            }
+            for(int j = 0; j<numOfBlocks/2; j++){
+                if((*blocknums)[k]== right[j]){
+                    rightcount++;
+                }
+            }            
+        }
+        if(leftcount!=0 && rightcount !=0){
+            lb++;
+        }
+    }  
+    return lb;
+}
+// lower bound for initial made.//////
+
