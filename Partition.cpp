@@ -12,16 +12,16 @@
 
 
 //// sorting based on highest number nets connected to/////
-void sorting(vector<block> Blocks, int* order){
+void sorting(vector<block> Blocks, int** order){
     int size = Blocks.size();
     for (int i =0; i<size; i++){
-        int max = Blocks[order[i]-1].GetNumOfNets();
+        int max = Blocks[(*order)[i]-1].GetNumOfNets();
         for (int j = i+1; j<size; j++){
-            if(max< Blocks[order[j]-1].GetNumOfNets()){
-               max = Blocks[order[j]-1].GetNumOfNets();
-               int swap = order[i];
-               order[i]=order[j];
-               order[j]=swap;
+            if(max< Blocks[(*order)[j]-1].GetNumOfNets()){
+               max = Blocks[(*order)[j]-1].GetNumOfNets();
+               int swap = (*order)[i];
+               (*order)[i]=(*order)[j];
+               (*order)[j]=swap;
             }
         }
     }
@@ -30,14 +30,39 @@ void sorting(vector<block> Blocks, int* order){
 
 
 /// get initial solution///
-void InitialSol(Net* nets, int* left, int* right, int numOfBlocks, int numNets){
-    
-    for (int i =0; i< numNets; i++){
-       vector<int>* blocknums = nets[i].getBlockNums();
-       //for()
+
+void InitialSol(Net* nets, int** left, int** right, int numOfBlocks, int numNets){
+    int leftnum = 0;
+    int rightnum =0;
+    for (int i = 0; i < numNets; i++) {
+        vector<int>* blocknums = nets[i].getBlockNums();
+        for (int j = 0; j < blocknums->size(); i++) {
+            int leftcount = 0;
+            int rightcount =0;
+            if (leftnum < numOfBlocks / 2) {
+                for (int y = 0; y < leftnum; y++) {
+                    if ((*left)[y] == (*blocknums)[j]) {
+                        leftcount++;
+                    }
+                }
+                if (leftcount == 0) {
+                    (*left)[leftnum] =(*blocknums)[j];
+                    leftnum++;
+                }
+            }
+            else{
+                for (int y = 0; y <rightnum; y++) {
+                    if ((*right)[y] == (*blocknums)[j]) {
+                        rightcount++;
+                    }
+                }
+                if (rightcount == 0) {
+                    (*right)[rightnum] = (*blocknums)[j];
+                    rightnum++;
+                }
+            }
+        }
     }
-    // how to get this!!
-    
 }
 /// got initial solution ////
 

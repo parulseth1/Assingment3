@@ -41,7 +41,11 @@ int main(int argc, char** argv) {
     for (i = 0; i<numOfBlocks; i++){
         order[i] = i+1;
     }
-    sorting (Blocks, order);
+    int* left = new int[numOfBlocks/2];
+    int* right = new int[numOfBlocks/2];
+    sorting (Blocks, &order);
+    InitialSol(Nets,&left, &right, numOfBlocks, numNets);
+    
     return 0;
 }
 

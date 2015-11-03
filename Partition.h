@@ -13,7 +13,8 @@
 #include <sstream>
 #include <fstream>
 #include "BandB.h"
-void sorting(vector<block>, int*);
+void sorting(vector<block>, int**);
+void InitialSol(Net*, int**, int**, int, int);
 
 #endif	/* PARTITION_H */
 
