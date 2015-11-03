@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
     numOfBlocks = Blocks.size();
     for (int i = 0; i < numNets; i++){
 
-        cout<<i<<"::"<<Nets[i].getNumPins()<<endl;
+        cout<<i+1<<"::"<<Nets[i].getNumPins()<<endl;
     }
     int i;
     int* order = new int[numOfBlocks];
@@ -44,13 +44,27 @@ int main(int argc, char** argv) {
     int* left_best = new int[numOfBlocks/2];
     int* right_best = new int[numOfBlocks/2];
     sorting (Blocks, &order);
-    for(i = 0; 1<numOfBlocks; i++){
+    for(i = 0; i<numOfBlocks; i++){
         int numberOfNet = Blocks[order[i]-1].GetNumOfNets();
         cout<<order[i]<<"::"<<numberOfNet<<endl;
     }
     InitialSol(Nets,&left_best, &right_best, numOfBlocks, numNets);
+    for (i = 0; i<numOfBlocks/2; i++){
+        cout<<"L::"<<left_best[i]<<" R:"<<right_best[i]<<endl;
+    }
     int lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
+    cout<<"lb of initial:"<<lb_best<<endl;
     
+    
+    
+    
+    
+    
+    if (Nets){
+        delete[] Nets;
+    }
+    
+    cout<<"Done"<<endl;
     return 0;
 }
 

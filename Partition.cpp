@@ -36,7 +36,7 @@ void InitialSol(Net* nets, int** left, int** right, int numOfBlocks, int numNets
     int rightnum =0;
     for (int i = 0; i < numNets; i++) {
         vector<int>* blocknums = nets[i].getBlockNums();
-        for (int j = 0; j < blocknums->size(); i++) {
+        for (int j = 0; j < blocknums->size(); j++) {
             int leftcount = 0;
             int rightcount =0;
             if (leftnum < numOfBlocks / 2) {
@@ -51,8 +51,14 @@ void InitialSol(Net* nets, int** left, int** right, int numOfBlocks, int numNets
                 }
             }
             else{
+
                 for (int y = 0; y <rightnum; y++) {
-                    if ((*right)[y] == (*blocknums)[j]) {
+                    if ((*right)[y] == (*blocknums)[j]){
+                        rightcount++;
+                    }
+                }
+                for(int k = 0; k<numOfBlocks/2; k++){
+                    if((*left)[k]== (*blocknums)[j]){
                         rightcount++;
                     }
                 }
@@ -86,6 +92,7 @@ int lowerBound_initial(Net* nets, int* left, int* right, int numNets, int numOfB
             }            
         }
         if(leftcount!=0 && rightcount !=0){
+            cout<<"netnum::"<<i+1<<endl;
             lb++;
         }
     }  
