@@ -10,6 +10,8 @@
 // get the LB function/// how????????
 // then define the ordering.
 
+
+//// sorting based on highest number nets connected to/////
 void sorting(vector<block> Blocks, int* order){
     int size = Blocks.size();
     for (int i =0; i<size; i++){
@@ -24,7 +26,18 @@ void sorting(vector<block> Blocks, int* order){
         }
     }
 }
+/// sorting done//
 
-void InitialSol(){
+
+/// get initial solution///
+void InitialSol(Net* nets, int* left, int* right, int numOfBlocks, int numNets){
+    
+    for (int i =0; i< numNets; i++){
+       vector<int>* blocknums = nets[i].getBlockNums();
+       //for()
+    }
+    // how to get this!!
     
 }
+/// got initial solution ////
+
