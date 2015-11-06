@@ -35,8 +35,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/Drawing.o \
 	${OBJECTDIR}/Parser.o \
 	${OBJECTDIR}/Partition.o \
+	${OBJECTDIR}/graphics.o \
 	${OBJECTDIR}/main.o
 
 
@@ -64,6 +66,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bandbpartition: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bandbpartition ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/Drawing.o: Drawing.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Drawing.o Drawing.cpp
+
 ${OBJECTDIR}/Parser.o: Parser.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -73,6 +80,11 @@ ${OBJECTDIR}/Partition.o: Partition.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Partition.o Partition.cpp
+
+${OBJECTDIR}/graphics.o: graphics.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/graphics.o graphics.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}

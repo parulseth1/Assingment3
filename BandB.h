@@ -12,6 +12,8 @@ private:
     int blockNum;
     vector<int> netnum;
     int netnums;
+    bool lock = false;
+    int gain = 0;
 public:
     void setBlockNum(int _blockNum){
         blockNum = _blockNum;
@@ -27,6 +29,24 @@ public:
     }
     int GetNumOfNets(){
         return netnums;
+    }
+    void setlock(int a){
+        if(a == 0){
+            lock = false;
+        }
+        if(a == 1){
+            lock = true;
+        }
+        
+    }
+    bool getlock(){
+        return lock;
+    }
+    int getGain(){
+        return gain;
+    }
+    void setGain(int a){
+        gain = gain + a;
     }
 };
 
@@ -55,6 +75,9 @@ public:
     
 };
 
-
+struct swapvar{
+    int index;
+    int LorR;
+};
 #endif	/* PLACER_H */
 
