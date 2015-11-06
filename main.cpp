@@ -14,7 +14,7 @@
 #include <fstream>
 #include "BandB.h"
 #include "Parser.h"
-#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct1.txt"
+#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct3.txt"
 
 using namespace std;
 
@@ -41,18 +41,26 @@ int main(int argc, char** argv) {
     for (i = 0; i<numOfBlocks; i++){
         order[i] = i+1;
     }
+    int* sort = new int[numNets];
+    for (i = 0; i<numNets; i++){
+        sort[i] = i+1;
+    }
     int* left_best = new int[numOfBlocks/2];
     int* right_best = new int[numOfBlocks/2];
     sorting (Blocks, &order);
+    sort_netnums(Nets, &sort, numNets);
     for(i = 0; i<numOfBlocks; i++){
         int numberOfNet = Blocks[order[i]-1].GetNumOfNets();
         cout<<order[i]<<"::"<<numberOfNet<<endl;
     }
-    InitialSol(Nets,&left_best, &right_best, numOfBlocks, numNets);
-    for (i = 0; i<numOfBlocks/2; i++){
-        cout<<"L::"<<left_best[i]<<" R:"<<right_best[i]<<endl;
-    }
+    InitialSol(Nets,&left_best, &right_best, numOfBlocks, numNets, sort);
+    
     int lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
+    cout<<"lb of initial before swap :"<<lb_best<<endl;
+    
+    Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
+ 
+    lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial:"<<lb_best<<endl;
     
     
@@ -60,6 +68,7 @@ int main(int argc, char** argv) {
     
     
     
+    // keep everything above this.////
     if (Nets){
         delete[] Nets;
     }

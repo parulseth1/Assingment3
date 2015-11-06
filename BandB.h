@@ -30,13 +30,8 @@ public:
     int GetNumOfNets(){
         return netnums;
     }
-    void setlock(int a){
-        if(a == 0){
-            lock = false;
-        }
-        if(a == 1){
-            lock = true;
-        }
+    void setlock(bool a){
+        lock = a;
         
     }
     bool getlock(){

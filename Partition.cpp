@@ -5,7 +5,7 @@
 #include <fstream>
 #include "Partition.h"
 #include "BandB.h"
-#define INTMIN 0
+#define INTMIN -100000002882993993002882
 // first we got to make function to make initial solution
 // get the LB function/// how????????
 // then define the ordering.
@@ -28,15 +28,27 @@ void sorting(vector<block> Blocks, int** order) {
     }
 }
 /// sorting done//
-
+void sort_netnums(Net* nets, int** sort, int numnet){
+    for(int i = 0; i<numnet; i++){
+        int max = nets[(*sort)[i]-1].getNumPins();
+        for (int j = i + 1; j < numnet; j++) {
+            if (max < nets[(*sort)[j] - 1].getNumPins()) {
+                max = nets[(*sort)[j] - 1].getNumPins();
+                int swap = (*sort)[i];
+                (*sort)[i] = (*sort)[j];
+                (*sort)[j] = swap;
+            }
+        }
+    }
+}
 
 /// get initial solution///
 
-void InitialSol(Net* nets, int** left, int** right, int numOfBlocks, int numNets) {
+void InitialSol(Net* nets, int** left, int** right, int numOfBlocks, int numNets, int*sort) {
     int leftnum = 0;
     int rightnum = 0;
     for (int i = 0; i < numNets; i++) {
-        vector<int>* blocknums = nets[i].getBlockNums();
+        vector<int>* blocknums = nets[sort[i]-1].getBlockNums();
         for (int j = 0; j < blocknums->size(); j++) {
             int leftcount = 0;
             int rightcount = 0;
@@ -85,15 +97,12 @@ int lowerBound_initial(Net* nets, int* left, int* right, int numNets, int numOfB
                 if ((*blocknums)[k] == left[j]) {
                     leftcount++;
                 }
-            }
-            for (int j = 0; j < numOfBlocks / 2; j++) {
                 if ((*blocknums)[k] == right[j]) {
                     rightcount++;
                 }
             }
         }
         if (leftcount != 0 && rightcount != 0) {
-            cout << "netnum::" << i + 1 << endl;
             lb++;
         }
     }
@@ -101,11 +110,14 @@ int lowerBound_initial(Net* nets, int* left, int* right, int numNets, int numOfB
 }
 // lower bound for initial made.//////
 
-void Initial_solution_swap(Net* nets, int** left, int** right, int numNets, int numOfBlocks, int lb_best, vector<block> Blocks) {
+
+/// Kernighan - Lin algorithm to get a better initial solution///
+void Initial_solution_swap(Net* nets, int** left, int** right, int numOfBlocks, vector<block> Blocks) {
     int G = 0;
     int K;
     int max_g;
     int* g_new = new int[numOfBlocks / 2];
+    int num =0;
     do {
         int** matrix = NULL;
         matrix = new int* [numOfBlocks];
@@ -120,14 +132,13 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numNets, int 
         for (int i = 0; i < numOfBlocks; i++) {
             vector<int>* netnum_i = Blocks[i].getNetNum();
             for (int k = 0; k < numOfBlocks; k++) {
-                if (i == k) {
-                    matrix[i][k] = 0;
-                }
-                vector<int>* netnum_k = Blocks[k].getNetNum();
-                for (int h = 0; h < netnum_i->size(); h++) {
-                    for (int n = 0; n < netnum_k->size(); n++) {
-                        if ((*netnum_i)[h] == (*netnum_k)[n]) {
-                            matrix[i][k] = matrix[i][k] + 1;
+                if (i != k) {
+                    vector<int>* netnum_k = Blocks[k].getNetNum();
+                    for (int h = 0; h < netnum_i->size(); h++) {
+                        for (int n = 0; n < netnum_k->size(); n++) {
+                            if ((*netnum_i)[h] == (*netnum_k)[n]) {
+                                matrix[i][k] = matrix[i][k] + 1;
+                            }
                         }
                     }
                 }
@@ -141,7 +152,7 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numNets, int 
             Evalues[a] = 0;
         }
         for (int a = 0; a < numOfBlocks; a++) {
-            for (int b = 0; b < numOfBlocks; b++) {
+            for (int b = 0; b < numOfBlocks/2; b++) {
                 Ivalues[a] = Ivalues[a] + matrix[a][(*left)[b] - 1];
                 Evalues[a] = Evalues[a] + matrix[a][(*right)[b] - 1];
             }
@@ -156,10 +167,14 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numNets, int 
 
         for (int a = 0; a < numOfBlocks; a++) {
             for (int b = 0; b < numOfBlocks; b++) {
-                matrix_g[a][b] = Dvalues[a] + Dvalues[b];
-                matrix_g[a][b] = matrix_g[a][b] - (2 * (matrix[a][b]));
+                if(a!=b){
+                    matrix_g[a][b] = Dvalues[a] + Dvalues[b];
+                    matrix_g[a][b] = matrix_g[a][b] - (2 * (matrix[a][b]));
+                }
             }
+                
         }
+
         int g;
         
         int row, column;
@@ -168,73 +183,45 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numNets, int 
         int max;
         swapvar* swap_var1 = new swapvar[numOfBlocks / 2];
         swapvar* swap_var2 = new swapvar[numOfBlocks / 2];
-
+        
         for (int n = 0; n < numOfBlocks / 2; n++) {
-            for (int a = 0; a < numOfBlocks; a++) {
-                for (int b = 0; b < numOfBlocks; b++) {
-                    if (Blocks[a].getlock() == false && Blocks[b].getlock() == false) {
-                        if (matrix_g[a][b] > max) {
-                            max = matrix_g[a][b];
-                            g = matrix_g[a][b];
+            max = INTMIN;
+            for (int a = 0; a < numOfBlocks/2; a++) {
+                for (int b = 0; b < numOfBlocks/2; b++) {
+                    if (Blocks[(*left)[a]-1].getlock() == false && Blocks[(*right)[b]-1].getlock() == false) {
+                        if (matrix_g[(*left)[a]-1][(*right)[b]-1] > max) {
+                            max = matrix_g[(*left)[a]-1][(*right)[b]-1];
+                            g = matrix_g[(*left)[a]-1][(*right)[b]-1];
                             if (n != 0) {
                                 g_new[n] = g + g_new[n - 1];
                             } else {
                                 g_new[n] = g;
                             }
-                            swap1[n] = a + 1;
-                            swap2[n] = b + 1;
-                            Blocks[a].setlock(1);
-                            Blocks[b].setlock(1);
+                            swap1[n] = a+1;
+                            swap2[n] = b+1;
+                            
                         }
                     }
                 }
-            }
-            for (int h = 0; h < numOfBlocks / 2; h++) {
-                if (swap1[n] == (*left)[h]) {
-                    swap_var1[n].index = h;
-                    swap_var1[n].LorR = 1;
-                }
-                if (swap2[n] == (*left)[h]) {
-                    swap_var2[n].index = h;
-                    swap_var2[n].LorR = 1;
-                }
-                if (swap1[n] == (*right)[h]) {
-                    swap_var1[n].index =h;
-                    swap_var1[n].LorR = h;
-                }
-                if (swap2[n] == (*right)[h]) {
-                    swap_var2[n].index = (*right)[h];
-                    swap_var2[n].LorR = 0;
+            }          
+            Blocks[(*left)[swap1[n]-1]-1].setlock(true);
+            Blocks[(*right)[swap2[n]-1]-1].setlock(true);
+           
+            for(int r =0; r<numOfBlocks; r++){
+                for(int o =0; o<numOfBlocks/2; o++){
+                    if(r+1 == (*left)[o] && r+1 !=swap1[n]){
+                        Dvalues[r] = Dvalues[r] +(2* matrix[r][((*left)[swap1[n]-1])-1]) - (2* matrix[r][((*right)[swap2[n]-1])-1]);
+                    }
+                    if(r+1 == (*right)[o] && r+1 !=swap2[n]){
+                        Dvalues[r] = Dvalues[r] - (2*matrix[r][((*left)[swap1[n]-1])-1]) + (2*matrix[r][((*right)[swap2[n]-1])-1]);
+                    }
                 }
             }
-            if (swap_var1[n].LorR == 1) {
-                if (swap_var2[n].LorR == 0) {
-                   for(int r =0; r<numOfBlocks; r++){
-                       for(int o =0; 0<numOfBlocks/2; o++){
-                           if(r+1 == (*left)[o] && r+1 !=swap_var1[n].index){
-                               Dvalues[r] = Dvalues[r] +(2*matrix[r][(*left)[swap_var1[n].index]-1]) - (2*matrix[r][(*right)[swap_var1[n].index]-1]);
-                           }
-                           if(r+1 == (*right)[o] && r+1 !=swap_var2[n].index){
-                               Dvalues[r] = Dvalues[r] - (2*matrix[r][(*left)[swap_var1[n].index]-1]) + (2*matrix[r][(*right)[swap_var1[n].index]-1]);
-                           }
-                       }
-                     
-                   }
-                }
-            }
-            if (swap_var1[n].LorR == 0) {
-                if (swap_var2[n].LorR == 1) {
-                   for(int r =0; r<numOfBlocks; r++){
-                       for(int o =0; 0<numOfBlocks/2; o++){
-                           if(r+1 == (*left)[o] && r+1 !=swap_var2[n].index){
-                               Dvalues[r] = Dvalues[r] - (2*matrix[r][(*right)[swap_var1[n].index]-1]) + (2*matrix[r][(*left)[swap_var1[n].index]]);
-                           }
-                           if(r+1 == (*right)[o] && r+1 !=swap_var1[n].index){
-                               Dvalues[r] = Dvalues[r] + (2*matrix[r][(*right)[swap_var1[n].index]-1]) + (2*matrix[r][(*left)[swap_var1[n].index]]);
-                           }
-                       }
-                     
-                   }
+            
+            for (int a = 0; a < numOfBlocks; a++) {
+                for (int b = 0; b < numOfBlocks; b++) {
+                    matrix_g[a][b] = Dvalues[a] + Dvalues[b];
+                    matrix_g[a][b] = matrix_g[a][b] - (2 * (matrix[a][b]));
                 }
             }
         }
@@ -247,33 +234,26 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numNets, int 
         }
         int one, two;
         for (int i = 0; i < K + 1; i++) {
-            if (swap_var1[i].LorR == 1) {
-                if (swap_var2[i].LorR == 0) {
-                    one = (*left[swap_var1[i].index - 1]);
-                    two = (*right[swap_var2[i].index - 1]);
-                    (*left[swap1[0]]) = two;
-                    (*right[swap2[0]]) = one;
-                }
-            }
-            if (swap_var1[i].LorR == 0) {
-                if (swap_var2[i].LorR == 1) {
-                    one = (*left[swap_var2[i].index - 1]);
-                    two = (*right[swap_var1[i].index - 1]);
-                    (*left[swap1[0]]) = two;
-                    (*right[swap2[0]]) = one;
-                }
-            }
+                    one = (*left)[swap1[i]- 1];
+                    two = (*right)[swap2[i] - 1];
+                    (*left)[swap1[i]-1] = two;
+                    (*right)[swap2[i]-1] = one;
         }
         for(int w=0; w<numOfBlocks; w++){
-            Blocks[w].setlock(0);
+            Blocks[w].setlock(false);
         }
-    } while (g_new[K] > 0);
+        G = g_new[K];
+        num++;
+    } while (G> 0);
 
 
 }
 
-// the big ass initial solution is over.....///// finally /// still have to check the functionality//
+// the big ass initial solution is over.....///// finally ///  functionality checked//
 
+void decision_tree(int lb_best, int** left, int** right, Net* net, vector<block> Blocks){
+    
+}
 
 
 
