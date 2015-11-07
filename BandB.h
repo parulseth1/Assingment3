@@ -13,7 +13,7 @@ private:
     vector<int> netnum;
     int netnums;
     bool lock = false;
-    int gain = 0;
+    
 public:
     void setBlockNum(int _blockNum){
         blockNum = _blockNum;
@@ -36,12 +36,6 @@ public:
     }
     bool getlock(){
         return lock;
-    }
-    int getGain(){
-        return gain;
-    }
-    void setGain(int a){
-        gain = gain + a;
     }
 };
 
@@ -73,6 +67,20 @@ public:
 struct swapvar{
     int index;
     int LorR;
+};
+
+struct data{
+    //all the important relevant data goes here!
+    int blocknum;
+    //a variable here should indicate which list this belongs to and a cumulative LB
+    int RightOrLeftList;
+    int runningLBsum; 
+    
+    //THIS HAS TO BE SET TO ZERO IN THE CLASS CONSTRUCTOR!
+    //this is the Binary tree stuff
+    data* left; //left child
+    data* right; //right child
+    data* parent; //parent (for head this is obviously null)
 };
 #endif	/* PLACER_H */
 
