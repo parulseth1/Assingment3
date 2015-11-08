@@ -60,11 +60,11 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bandbpartition
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/assingment3
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bandbpartition: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/assingment3: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bandbpartition ${OBJECTFILES} ${LDLIBSOPTIONS} -lX11 -lXft -lfontconfig
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/assingment3 ${OBJECTFILES} ${LDLIBSOPTIONS} -lX11 -lXft -lfontconfig
 
 ${OBJECTDIR}/Drawing.o: Drawing.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -97,7 +97,7 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bandbpartition
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/assingment3
 
 # Subprojects
 .clean-subprojects:

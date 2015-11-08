@@ -1,41 +1,48 @@
 #include "Drawing.h"
 
 #include <iostream>
+#include <cfloat>
 
 using namespace::std;
 
+#define LEFT 1
+#define RIGHT 2
+
+struct Point{
+    int x;
+    int y;
+    Point(int _x, int _y){
+        x = _x;
+        y = _y;
+    }
+};
+
+void drawCircle(Point c, int r){
+    drawarc(c.x, c.y, r, 0, 360);
+}
+
 void drawscreen();
 
-double* x = NULL;
-double* y = NULL;
-int gridSize = 10;
-int blockCnt = 0;
-Net* nets = NULL;
-int netCnt = 0;
-vector<block> Blocks;
 
-int LoadBlocks (double* _x, double* _y, int _blockCnt, int _gridSize) {
+data* head = NULL;
+int levels = 0;
+int circleRadius = 350;
+Point ScreenSize(10000, 10000);
+Point Parent(0, 0);
+int PixelsPerLevel = 0;
+int initDistanceBetweenNodes = 0;
 
-    x = _x;
-    y = _y;
-    blockCnt = _blockCnt;
-    gridSize = _gridSize;
+int DrawOnScreen(data* _head, int _levels) {
     
-    for (int i = 0; i < blockCnt; i++){
-        x[i] = x[i]/10.0;
-        y[i] = y[i]/10.0;
-    }
-}
+    head = _head;
+    levels = _levels;
+    PixelsPerLevel = 150;
+    ScreenSize.y = (PixelsPerLevel + 2*circleRadius)*levels;
+    Parent.x = ScreenSize.x/2;
+    Parent.y = ScreenSize.y - circleRadius;
+    init_graphics("Branch And Bound", WHITE);
 
-int LoadRatsNest(Net* _nets, int _netCnt) {
-    nets = _nets;
-    netCnt = _netCnt;
-}
-
-int DrawOnScreen() {
-    init_graphics("Analytical Placer", WHITE);
-
-    set_visible_world(0, 0, 1200, 1200);
+    set_visible_world(0, 0, ScreenSize.x, ScreenSize.y);
 
     event_loop(NULL, NULL, NULL, drawscreen);
 
@@ -44,45 +51,49 @@ int DrawOnScreen() {
     return 0;
 }
 
+
+void drawTree(data* node, int levelAt, int leftOrRight, Point PointAt){
+    //draw this node
+    Point NodeCoords(0, 0);
+    if (leftOrRight == -1){
+        //head node
+        NodeCoords = PointAt;
+    }
+    else if (leftOrRight == LEFT){
+        NodeCoords.x = PointAt.x - (circleRadius*2);
+        NodeCoords.y = PointAt.y - PixelsPerLevel - 2*circleRadius;
+    }
+    else if (leftOrRight == RIGHT){
+        NodeCoords.x = PointAt.x + (circleRadius*2);
+        NodeCoords.y = PointAt.y - PixelsPerLevel - 2*circleRadius;
+    }
+    
+    char* text = new char[10];
+//    sprintf(text, "%d", NodeCoords.x);
+    sprintf(text, "%d", node->blocknum);
+    drawCircle(NodeCoords, circleRadius);
+    drawtext(NodeCoords.x, NodeCoords.y, text, FLT_MAX, FLT_MAX);
+    delete[] text;
+    
+    if (node->left != NULL){
+        drawTree(node->left, levelAt+1, LEFT, NodeCoords);
+    }
+    if (node->right != NULL){
+        drawTree(node->right, levelAt+1, RIGHT, NodeCoords);
+    }
+    
+}
+
 void drawscreen() {
-    //draw the main grid and the wire mesh - gridSize x gridSize grid i.e.
-    //draw the main rect first
+//    we have to draw, binary tree of levels given by variable 'levels'
+//    we start with x pixel distance between two child nodes, and reduce this by circleRadius in every level
+//    by the time we complete the levels, we lose x - levels*circleRadius
+//    if this is set to circleRadius*2 pixels, then
+//    x = (2+levels)*circleRadius;
+    
     clearscreen();
-    float blockDim = 100;//1000 / (gridSize + 2);
-    float rectOffset = 100;
-
-    setcolor(135, 206, 250); //blue
-    fillrect(rectOffset, rectOffset, rectOffset + blockDim*gridSize, rectOffset + blockDim * gridSize);
-
-    //draw the mesh lines
-    setcolor(0, 0, 0); //black
-    for (int i = 0; i <= gridSize; i++) {
-        drawline(rectOffset + blockDim*i, rectOffset, rectOffset + blockDim*i, rectOffset + gridSize * blockDim);
-        drawline(rectOffset, rectOffset + blockDim*i, rectOffset + gridSize*blockDim, rectOffset + blockDim * i);
-    }
-
-    //draw the blocks as points
-    setcolor(0, 0, 0); //grey
-    for (int i = 0; i < blockCnt; i++) {
-        drawline(rectOffset + blockDim * (x[i]), rectOffset + blockDim * (y[i]), rectOffset + blockDim * (x[i]), rectOffset + blockDim * (y[i]));
-    }
-
-    //draw the rats nest
-    setcolor(255, 0, 0);
-    //for each net 
-    if (nets != NULL){
-        for (int i = 0; i < netCnt; i++){
-            vector<int>* blocks = nets[i].getBlockNums();
-            for (int j = 0; j < blocks->size(); j++){
-                for (int k = j + 1; k < blocks->size(); k++){
-                    double x1 = x[(*blocks)[j]-1];
-                    double y1 = y[(*blocks)[j]-1];
-                    double x2 = x[(*blocks)[k]-1];
-                    double y2 = y[(*blocks)[k]-1];
-                    drawline(rectOffset + blockDim*x1, rectOffset + blockDim*y1, rectOffset + blockDim*x2, rectOffset + blockDim*y2);
-                }
-            }
-        }
-    }
-    //	
+    setfontsize(5);
+    initDistanceBetweenNodes = (2+levels)*circleRadius;
+    
+    drawTree(head, 0,-1, Parent);
 }
