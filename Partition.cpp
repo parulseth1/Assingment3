@@ -247,6 +247,7 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numOfBlocks, 
             Blocks[w].setlock(false);
         }
         G = g_new[K];
+        cout<<G<<endl;
         num++;
     } while (G> 0);
 
@@ -301,7 +302,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         
         *count_node = *count_node+1;
         *left_count = *left_count+1;
-        cout<<"leftcount"<<*left_count<<endl;
+        //cout<<"leftcount"<<*left_count<<endl;
         if(newNode->runningLBsum >= *lb_best){
             return NULL;
         }
@@ -346,11 +347,13 @@ int calculateCO(data* node, vector<block> Blocks, int numNets){
      accounted[i] = 0;
      }
      data* newnode = node;
+     
      vector<int>* netnum_node = Blocks[(node->blocknum) -1].getNetNum();
      while(node!= NULL){
      while(newnode->parent != NULL){
-         if(node->RightOrLeftList != newnode->parent->RightOrLeftList){
-            vector<int>* netnum_parent = Blocks[(newnode->parent->blocknum)-1].getNetNum();
+         data* Parent = (*newnode).parent;
+         if((*node).RightOrLeftList != (*Parent).RightOrLeftList){
+            vector<int>* netnum_parent = Blocks[(Parent->blocknum)-1].getNetNum();
             for(int i =0; i<netnum_node->size(); i++){
                 for(int j = 0; j<netnum_parent->size(); j++){
                     if(netnum_node[i]==netnum_parent[j]){

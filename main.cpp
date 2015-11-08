@@ -14,7 +14,7 @@
 #include <fstream>
 #include "BandB.h"
 #include "Parser.h"
-#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct1.txt"
+#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct2.txt"
 #define PARENT (-1)
 
 using namespace std;
