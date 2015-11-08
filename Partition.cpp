@@ -247,7 +247,7 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numOfBlocks, 
             Blocks[w].setlock(false);
         }
         G = g_new[K];
-        cout<<G<<endl;
+        //cout<<G<<endl;
         num++;
     } while (G> 0);
 
@@ -263,7 +263,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         int k=0;
         int l=0;
         data* newnode = Parent;
-        *lb_best = Parent->runningLBsum;
+        //*lb_best = Parent->runningLBsum;
         while(newnode!=NULL){
             if(newnode->RightOrLeftList == LEFT_CHILD){
                  (*right)[k] = newnode->blocknum;
@@ -276,11 +276,13 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
          newnode = newnode->parent; 
          
         }
+        
         //calculate final LB compare with LB_best and put the solution in left and right;
         return NULL;
         
     }
     data* newNode = new data; //the new node is created here
+    newNode->parent = Parent;
     cout<<order[index]<<endl;
     //based on whether this is the left/right child, we can do diff operations,
     if (LeftOrRightChild == PARENT){
@@ -299,16 +301,17 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         newNode->RightOrLeftList = LeftOrRightChild;
         int lb =calculateCO(newNode,Blocks,numNets);
         newNode->runningLBsum =lb;
-        
         *count_node = *count_node+1;
-        *left_count = *left_count+1;
-        //cout<<"leftcount"<<*left_count<<endl;
+        
+        cout<<"leftcount"<<*left_count<<endl;
         if(newNode->runningLBsum >= *lb_best){
+            
             return NULL;
         }
         if(*left_count > numOfBlocks/2){
             return NULL;
         }
+        *left_count = *left_count+1;
 
         
     }
@@ -320,19 +323,20 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         newNode->runningLBsum =lb;
         
         *count_node = *count_node+1;
-        *right_count = *right_count+1;
+        
+        cout<<"rightcount"<<*right_count<<endl;
         if(newNode->runningLBsum >= *lb_best){
             return NULL;
         }
         if(*right_count > numOfBlocks/2){
             return NULL;
         }
-        
+        *right_count = *right_count+1;
         
     }
     
     //set up the pointers,
-    newNode->parent = Parent;
+    
     newNode->left = makeTree(Blocks, index+1, newNode, LEFT_CHILD, order, numOfBlocks,lb_best, left, right, left_count, right_count, count_node, numNets); //the left child is a new node, that is recursively created by the maketree function
     newNode->right = makeTree(Blocks, index+1, newNode, RIGHT_CHILD, order, numOfBlocks,lb_best,left, right, left_count, right_count, count_node, numNets); //similarly for the right child
     
@@ -356,7 +360,7 @@ int calculateCO(data* node, vector<block> Blocks, int numNets){
             vector<int>* netnum_parent = Blocks[(Parent->blocknum)-1].getNetNum();
             for(int i =0; i<netnum_node->size(); i++){
                 for(int j = 0; j<netnum_parent->size(); j++){
-                    if(netnum_node[i]==netnum_parent[j]){
+                    if((*netnum_node)[i]==(*netnum_parent)[j]){
                         if(accounted[(*netnum_node)[i] - 1] == 0){
                             LB++;
                             accounted[(*netnum_node)[i] - 1] = 1;
