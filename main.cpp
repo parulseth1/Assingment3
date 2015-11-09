@@ -14,15 +14,23 @@
 #include <fstream>
 #include "BandB.h"
 #include "Parser.h"
-#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct1.txt"
+#include <string.h>
+//#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct4.txt"
 #define PARENT (-1)
 
-using namespace std;
+using namespace::std;
 
-/*
- * 
- */
-int main(int argc, char** argv) {
+int main(int argc, const char * argv[]) {
+    
+    
+     if (argc < 2) {
+        cout << "Usage : ./BandBPartition <File name>" << endl;
+        return 1;
+    }
+    
+    char* FILENAME = new char[strlen(argv[1]) + 1];
+    strcpy(FILENAME, argv[1]);
+    cout<<FILENAME<<endl;
     
     vector<block> Blocks;
     int numOfBlocks;
@@ -59,20 +67,22 @@ int main(int argc, char** argv) {
     int lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial before swap :"<<lb_best<<endl;
     
-    Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
+   
+    
+   Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
  
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial:"<<lb_best<<endl;
     int leftcount =0;
     int rightcount=0;
     int node_count =0;
-
-    data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, lb_best, &left_best,&right_best, &node_count, numNets);
-    //cout<<"lb"<<lb_best;
+    
+    data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, &lb_best, &left_best,&right_best, &node_count, numNets);
+    cout<<"lb"<<lb_best;
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"LB after tree"<<lb_best<<endl;
 
-    cout<<"node visisted"<<node_count<<endl;
+    cout<<"node visited"<<node_count<<endl;
 
     
     

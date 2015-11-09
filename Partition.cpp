@@ -158,8 +158,16 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numOfBlocks, 
         }
         for (int a = 0; a < numOfBlocks; a++) {
             for (int b = 0; b < numOfBlocks/2; b++) {
-                Ivalues[a] = Ivalues[a] + matrix[a][(*left)[b] - 1];
-                Evalues[a] = Evalues[a] + matrix[a][(*right)[b] - 1];
+                for(int n = 0; n<numOfBlocks/2;n++){
+                    if(a+1 == (*left)[n]){
+                        Ivalues[a] = Ivalues[a] + matrix[a][(*left)[b] - 1];
+                         Evalues[a] = Evalues[a] + matrix[a][(*right)[b] - 1];
+                    }
+                    if(a+1 == (*right)[n]){
+                        Ivalues[a] = Ivalues[a] + matrix[a][(*right)[b] - 1];
+                        Evalues[a] = Evalues[a] + matrix[a][(*left)[b] - 1];
+                    }
+                }
             }
             Dvalues[a] = Evalues[a] - Ivalues[a];
         }
@@ -258,7 +266,7 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numOfBlocks, 
 // the big ass initial solution is over.....///// finally ///  functionality checked//
 // decision tree.. going for it!!//
 
-data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChild, int* order, int numOfBlocks, int lb_best, int** left, int** right, int* count_node, int numNets){
+data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChild, int* order, int numOfBlocks, int* lb_best, int** left, int** right, int* count_node, int numNets){
     // a condition based on which the node will not be created and a null is returned,indicates the end of the tree
     
     if (index >= numOfBlocks){
@@ -267,7 +275,10 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         data* newnode = Parent;
         //*lb_best = Parent->runningLBsum;
         int lb = calculateCO(Parent,Blocks,numNets);
-        if(lb<lb_best){
+        cout<<"lb:"<<lb;
+        if(lb < *lb_best){
+            *lb_best = lb;
+            cout<<endl<<"lbBest"<<lb<<endl;
         while(newnode!=NULL){
             if(newnode->RightOrLeftList == LEFT_CHILD){
                  (*right)[k] = newnode->blocknum;
@@ -288,29 +299,25 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
     }
     data* newNode = new data; //the new node is created here
     newNode->parent = Parent;
-    //cout<<order[index]<<endl;
+    
     //based on whether this is the left/right child, we can do diff operations,
     if (LeftOrRightChild == PARENT){
         newNode->blocknum = order[index];
         newNode->RightOrLeftList=LEFT_CHILD;
-        //*left_count = *left_count +1;
         newNode->runningLBsum = 0;
-        // put in a side
-        // set LB =0 
-        // store and compare//
+        //cout<<"PP-"<<order[index]<<endl;
     }
     //left adds, right subtracts, but replace with whatever necessary
     else if (LeftOrRightChild == LEFT_CHILD){
-        
         newNode->blocknum = order[index];
         newNode->RightOrLeftList = LeftOrRightChild;
         int lb =calculateCO(newNode,Blocks,numNets);
         newNode->runningLBsum =lb;
         *count_node = *count_node+1;
-        
-        //cout<<"leftcount"<<*left_count<<endl;
-        if(newNode->runningLBsum >= lb_best){
-            
+        //cout<<"Left-"<<order[index]<<endl;
+        if(newNode->runningLBsum >= *lb_best){
+            newNode->left = NULL;
+            newNode->right = NULL;
             return NULL;
         }
         data* node = newNode;
@@ -322,11 +329,10 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
             node = node->parent;
         }
         if(leftcount > numOfBlocks/2){
+            newNode->left = NULL;
+            newNode->right = NULL;
             return NULL;
-        }
-        
-
-        
+        }  
     }
     else if (LeftOrRightChild == RIGHT_CHILD){
         newNode->blocknum = order[index];
@@ -334,11 +340,13 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         newNode->RightOrLeftList = LeftOrRightChild;
         int lb =calculateCO(newNode,Blocks,numNets);
         newNode->runningLBsum =lb;
-        
+        //cout<<"right-"<<order[index]<<endl;
         *count_node = *count_node+1;
         
        // cout<<"rightcount"<<*right_count<<endl;
-        if(newNode->runningLBsum >= lb_best){
+        if(newNode->runningLBsum >= *lb_best){
+            newNode->left = NULL;
+            newNode->right = NULL;
             return NULL;
         }
         
@@ -351,6 +359,8 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
             node = node->parent;
         }
         if(rightcount > numOfBlocks/2){
+            newNode->left = NULL;
+            newNode->right = NULL;      
             return NULL;
         }
         
@@ -378,13 +388,14 @@ int calculateCO(data* node, vector<block> Blocks, int numNets){
         newNode = node;
         while(newNode->parent != NULL){
             if(node->RightOrLeftList != newNode->parent->RightOrLeftList){
-                vector<int>* netnum_parent = Blocks[node->blocknum -1].getNetNum();
+                vector<int>* netnum_parent = Blocks[newNode->parent->blocknum -1].getNetNum();
                 for(int i = 0; i<netnum_node->size(); i++){
                     for(int j = 0; j<netnum_parent->size(); j++){
                         if((*netnum_node)[i]==(*netnum_parent)[j]){
                             if(accounted[((*netnum_node)[i]-1)] == 0){
                                 LB++;
                                accounted[((*netnum_node)[i]-1)] =1; 
+                               //cout<<"netnum-"<<(*netnum_node)[i]<<endl;
                             }
                         }
                     }
