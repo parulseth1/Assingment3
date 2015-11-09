@@ -312,7 +312,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
             }
             newnode= newnode->parent;
         }
-        if(rightcount == numOfBlocks/2){
+        if(leftcount == numOfBlocks/2){
             return NULL;
         }
 
