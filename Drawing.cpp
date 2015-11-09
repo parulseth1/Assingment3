@@ -37,6 +37,7 @@ int DrawOnScreen(data* _head, int _levels) {
     head = _head;
     levels = _levels;
     PixelsPerLevel = 150;
+    ScreenSize.x = levels*2*circleRadius;
     ScreenSize.y = (PixelsPerLevel + 2*circleRadius)*levels;
     Parent.x = ScreenSize.x/2;
     Parent.y = ScreenSize.y - circleRadius;
@@ -60,11 +61,11 @@ void drawTree(data* node, int levelAt, int leftOrRight, Point PointAt){
         NodeCoords = PointAt;
     }
     else if (leftOrRight == LEFT){
-        NodeCoords.x = PointAt.x - (circleRadius*2);
+        NodeCoords.x = PointAt.x - (circleRadius*2 - levelAt*3);
         NodeCoords.y = PointAt.y - PixelsPerLevel - 2*circleRadius;
     }
     else if (leftOrRight == RIGHT){
-        NodeCoords.x = PointAt.x + (circleRadius*2);
+        NodeCoords.x = PointAt.x + (circleRadius*2 - levelAt*3);
         NodeCoords.y = PointAt.y - PixelsPerLevel - 2*circleRadius;
     }
     
