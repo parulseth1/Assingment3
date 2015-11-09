@@ -53,20 +53,20 @@ int DrawOnScreen(data* _head, int _levels) {
 }
 
 
-void drawTree(data* node, int levelAt, int leftOrRight, Point PointAt){
+void drawTree(data* node, int levelAt, int leftOrRight, Point ParentNodeCoords){
     //draw this node
     Point NodeCoords(0, 0);
     if (leftOrRight == -1){
         //head node
-        NodeCoords = PointAt;
+        NodeCoords = ParentNodeCoords;
     }
     else if (leftOrRight == LEFT){
-        NodeCoords.x = PointAt.x - (circleRadius*2 - levelAt*3);
-        NodeCoords.y = PointAt.y - PixelsPerLevel - 2*circleRadius;
+        NodeCoords.x = ParentNodeCoords.x - (circleRadius*2 - levelAt*10);
+        NodeCoords.y = ParentNodeCoords.y - PixelsPerLevel - 2*circleRadius;
     }
     else if (leftOrRight == RIGHT){
-        NodeCoords.x = PointAt.x + (circleRadius*2 - levelAt*3);
-        NodeCoords.y = PointAt.y - PixelsPerLevel - 2*circleRadius;
+        NodeCoords.x = ParentNodeCoords.x + (circleRadius*2 - levelAt*10);
+        NodeCoords.y = ParentNodeCoords.y - PixelsPerLevel - 2*circleRadius;
     }
     
     char* text = new char[10];
@@ -75,6 +75,13 @@ void drawTree(data* node, int levelAt, int leftOrRight, Point PointAt){
     drawCircle(NodeCoords, circleRadius);
     drawtext(NodeCoords.x, NodeCoords.y, text, FLT_MAX, FLT_MAX);
     delete[] text;
+    
+    //draw the lines
+    if (leftOrRight != -1){
+        //there is a parent for this 
+        drawline(NodeCoords.x, NodeCoords.y, ParentNodeCoords.x, ParentNodeCoords.y);
+    }
+    
     
     if (node->left != NULL){
         drawTree(node->left, levelAt+1, LEFT, NodeCoords);
@@ -93,7 +100,7 @@ void drawscreen() {
 //    x = (2+levels)*circleRadius;
     
     clearscreen();
-    setfontsize(5);
+    setfontsize(8);
     initDistanceBetweenNodes = (2+levels)*circleRadius;
     
     drawTree(head, 0,-1, Parent);
