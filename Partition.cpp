@@ -5,7 +5,8 @@
 #include <fstream>
 #include "Partition.h"
 #include "BandB.h"
-#define INTMIN -100000002882993993002882
+#include <limits.h>
+//#define INTMIN -100000002882993993002882
 #define LEFT_CHILD 1
 #define RIGHT_CHILD 2
 #define PARENT (-1)
@@ -189,7 +190,7 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numOfBlocks, 
         swapvar* swap_var2 = new swapvar[numOfBlocks / 2];
         
         for (int n = 0; n < numOfBlocks / 2; n++) {
-            max = INTMIN;
+            max = INT_MIN;
             for (int a = 0; a < numOfBlocks/2; a++) {
                 for (int b = 0; b < numOfBlocks/2; b++) {
                     if (Blocks[(*left)[a]-1].getlock() == false && Blocks[(*right)[b]-1].getlock() == false) {
@@ -256,7 +257,9 @@ void Initial_solution_swap(Net* nets, int** left, int** right, int numOfBlocks, 
 
 // the big ass initial solution is over.....///// finally ///  functionality checked//
 // decision tree.. going for it!!//
-data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChild, int* order, int numOfBlocks, int* lb_best, int** left, int** right, int* left_count, int* right_count, int* count_node, int numNets){
+
+
+data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChild, int* order, int numOfBlocks, int lb_best, int** left, int** right, int* left_count, int* right_count, int* count_node, int numNets){
     // a condition based on which the node will not be created and a null is returned,indicates the end of the tree
     
     if (index >= numOfBlocks){
@@ -265,7 +268,8 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         data* newnode = Parent;
 
         int lb = calculateCO(Parent, Blocks, numNets);
-        if(lb < *lb_best){
+        
+        if(lb < lb_best){
 
             while(newnode!=NULL){
                 if(newnode->RightOrLeftList == LEFT_CHILD){
@@ -303,7 +307,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         *count_node = *count_node+1;
         
         //cout<<"leftcount"<<*left_count<<endl;
-        if(newNode->runningLBsum >= *lb_best){
+        if(newNode->runningLBsum >= lb_best){
             
             return NULL;
         }
@@ -334,7 +338,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         newNode->runningLBsum =lb;
         
         *count_node = *count_node+1;
-        if(newNode->runningLBsum >= *lb_best){
+        if(newNode->runningLBsum >= lb_best){
             return NULL;
         }
 
@@ -361,43 +365,35 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
 }
 
 int calculateCO(data* node, vector<block> Blocks, int numNets){
-     int LB = 0;
-     int* accounted = new int[numNets];
-     for(int i= 0; i<numNets; i++){
-     accounted[i] = 0;
-     }
-     data* newnode = node;
-
-    data* node1 = node;
-     
-    while(node1!= NULL){
-        vector<int>* netnum_node = Blocks[(node1->blocknum) -1].getNetNum();
-        while(newnode->parent != NULL){
-            data* Parent = (*newnode).parent;
-            if((*node1).RightOrLeftList != (*Parent).RightOrLeftList){
-
-               vector<int>* netnum_parent = Blocks[(Parent->blocknum)-1].getNetNum();
-               for(int i =0; i<netnum_node->size(); i++){
-                   for(int j = 0; j<netnum_parent->size(); j++){
-                       if((*netnum_node)[i]==(*netnum_parent)[j]){
-                           if(accounted[(*netnum_node)[i] - 1] == 0){
-                               LB++;
-                               accounted[(*netnum_node)[i] - 1] = 1;
-                           } 
-                       }
-                   }
-
-               }
+    int LB = 0;
+    int* accounted =new int[numNets];
+    for(int i =0; i<numNets; i++){
+        accounted[i]=0;
+    }
+    data* newNode = new data;
+    while(node!=NULL){
+        vector<int>* netnum_node = Blocks[node->blocknum -1].getNetNum();
+        newNode = node;
+        while(newNode->parent != NULL){
+            if(node->RightOrLeftList != newNode->parent->RightOrLeftList){
+                vector<int>* netnum_parent = Blocks[node->blocknum -1].getNetNum();
+                for(int i = 0; i<netnum_node->size(); i++){
+                    for(int j = 0; j<netnum_parent->size(); j++){
+                        if((*netnum_node)[i]==(*netnum_parent)[j]){
+                            if(accounted[((*netnum_node)[i]-1)] == 0){
+                                LB++;
+                               accounted[((*netnum_node)[i]-1)] =1; 
+                            }
+                        }
+                    }
+                }
             }
-            newnode = newnode->parent;
+            newNode= newNode->parent;
         }
-
-        node1 = node1->parent;
-
-     }
-     //LB = LB+node->parent->runningLBsum;
-     return LB;
+        node = node->parent;
+    }    
+    return LB;
  }
-//// finally its done!!!!!!!//// yayyyyyyieeeeee/////
+//// finally its done!!!!!!!//// yayyyyyyieee/////
 
 
