@@ -408,5 +408,11 @@ int calculateCO(data* node, vector<block> Blocks, int numNets){
     return LB;
  }
 //// finally its done!!!!!!!//// yayyyyyyieee/////
+/// i can improve my Lower bound function (go for something that predicts.....)to get better nodes visited.//
+
+
+
+
+// now parallel implementation!!//
 
 

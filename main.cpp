@@ -38,13 +38,13 @@ int main(int argc, const char * argv[]) {
     int numNets = 0;
     doParse(FILENAME, &Blocks, &Nets, &numNets);
     
-    cout<<"Parsing Complete"<<endl;
-    cout<<"number of nets: "<<numNets<<endl;
-    numOfBlocks = Blocks.size();
-    for (int i = 0; i < numNets; i++){
-
-        cout<<i+1<<"::"<<Nets[i].getNumPins()<<endl;
-    }
+//    cout<<"Parsing Complete"<<endl;
+//    cout<<"number of nets: "<<numNets<<endl;
+         numOfBlocks = Blocks.size();
+//    for (int i = 0; i < numNets; i++){
+//
+//        cout<<i+1<<"::"<<Nets[i].getNumPins()<<endl;
+//    }
     int i;
     int* order = new int[numOfBlocks];
     for (i = 0; i<numOfBlocks; i++){
@@ -58,10 +58,10 @@ int main(int argc, const char * argv[]) {
     int* right_best = new int[numOfBlocks/2];
     sorting (Blocks, &order);
     sort_netnums(Nets, &sort, numNets);
-    for(i = 0; i<numOfBlocks; i++){
-        int numberOfNet = Blocks[order[i]-1].GetNumOfNets();
-        cout<<order[i]<<"::"<<numberOfNet<<endl;
-    }
+//    for(i = 0; i<numOfBlocks; i++){
+//        int numberOfNet = Blocks[order[i]-1].GetNumOfNets();
+//        cout<<order[i]<<"::"<<numberOfNet<<endl;
+//    }
     InitialSol(Nets,&left_best, &right_best, numOfBlocks, numNets, sort);
     
     int lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
@@ -69,7 +69,7 @@ int main(int argc, const char * argv[]) {
     
    
     
-   Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
+   //Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
  
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial:"<<lb_best<<endl;
