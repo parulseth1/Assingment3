@@ -14,7 +14,7 @@
 #include <fstream>
 #include "BandB.h"
 #include "Parser.h"
-#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct3.txt"
+#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct1.txt"
 #define PARENT (-1)
 
 using namespace std;
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
     int rightcount=0;
     int node_count =0;
 
-    data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, lb_best, &left_best,&right_best, &leftcount, &rightcount, &node_count, numNets);
+    data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, lb_best, &left_best,&right_best, &node_count, numNets);
     //cout<<"lb"<<lb_best;
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"LB after tree"<<lb_best<<endl;
