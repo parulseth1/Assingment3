@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/Drawing.o \
+	${OBJECTDIR}/Parallel.o \
 	${OBJECTDIR}/Parser.o \
 	${OBJECTDIR}/Partition.o \
 	${OBJECTDIR}/graphics.o \
@@ -70,6 +71,11 @@ ${OBJECTDIR}/Drawing.o: Drawing.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Drawing.o Drawing.cpp
+
+${OBJECTDIR}/Parallel.o: Parallel.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Parallel.o Parallel.cpp
 
 ${OBJECTDIR}/Parser.o: Parser.cpp 
 	${MKDIR} -p ${OBJECTDIR}

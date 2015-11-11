@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>BandB.h</itemPath>
       <itemPath>Drawing.h</itemPath>
+      <itemPath>Parallel.h</itemPath>
       <itemPath>Parser.h</itemPath>
       <itemPath>Partition.h</itemPath>
       <itemPath>easygl_constants.h</itemPath>
@@ -19,6 +20,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Drawing.cpp</itemPath>
+      <itemPath>Parallel.cpp</itemPath>
       <itemPath>Parser.cpp</itemPath>
       <itemPath>Partition.cpp</itemPath>
       <itemPath>graphics.cpp</itemPath>
@@ -57,6 +59,10 @@
       <item path="Drawing.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Drawing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parallel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Parallel.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Parser.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -100,6 +106,10 @@
       <item path="Drawing.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Drawing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parallel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Parallel.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Parser.cpp" ex="false" tool="1" flavor2="0">
       </item>
