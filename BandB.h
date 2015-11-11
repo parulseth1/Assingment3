@@ -103,7 +103,7 @@ struct threadParams {
 struct LBandNode{ //couldnt think of any other name, plus coming close to St.George
 	data* node;
 	int LB;
-}
+};
 
 #endif	/* PLACER_H */
 

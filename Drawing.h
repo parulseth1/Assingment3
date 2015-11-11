@@ -5,9 +5,7 @@
 #include "BandB.h"
 #include "Partition.h"
 
-int LoadBlocks(double*, double*, int, int);
-int LoadRatsNest(Net*, int);
-int DrawOnScreen();
+int DrawOnScreen(data* _head, int _levels);
 
 
 

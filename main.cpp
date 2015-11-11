@@ -17,6 +17,7 @@
 #include <string.h>
 #include "Parallel.h"
 //#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct4.txt"
+
 #define PARENT (-1)
 
 using namespace::std;
@@ -91,6 +92,10 @@ int main(int argc, const char * argv[]) {
     if (Nets){
         delete[] Nets;
     }
+    
+    cout<<numOfBlocks<<"::"<<newNode;
+    
+    DrawOnScreen(newNode, numOfBlocks);
     
     cout<<"Done"<<endl;
     return 0;
