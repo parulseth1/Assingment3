@@ -25,8 +25,9 @@ void* makeTreeParallel(void* ptr) {
     int** right = Params->right; // global
     int* count_node = Params->count_node; // global 
     int numNets = Params->numNets;
+    vector<block> Blocks = Params->Blocks;
 
-    data* newNode_right = new data;
+    //data* newNode_right = new data;
     pthread_mutex_lock(&mutex1);
 
     //any thread changing global variable read/write happens here

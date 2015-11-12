@@ -16,6 +16,7 @@
 #include "Parser.h"
 #include <string.h>
 #include "Parallel.h"
+#include "Drawing.h"
 //#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct4.txt"
 
 #define PARENT (-1)

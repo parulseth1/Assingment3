@@ -13,6 +13,7 @@
 #include <sstream>
 #include <fstream>
 #include "BandB.h"
+#include "Parallel.h"
 void sorting(vector<block>, int**);
 void InitialSol(Net*, int**, int**, int, int, int*);
 int lowerBound_initial(Net*, int*, int*, int, int);
