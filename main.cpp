@@ -103,6 +103,7 @@ int main(int argc, const char * argv[]) {
     Params->right = &right_best;
     Params->count_node = &node_count;
     Params->numNets = numNets;
+    Params->Blocks = Blocks;
 	//etc, etc...
 
 	pthread_t BBthread;
