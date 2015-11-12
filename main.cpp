@@ -22,6 +22,7 @@
 //#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct4.txt"
 
 #define PARENT (-1)
+#define LEFT_CHILD 1
 
 
 using namespace::std;
@@ -73,25 +74,32 @@ int main(int argc, const char * argv[]) {
     int lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial before swap :"<<lb_best<<endl;
     
-   
+    left_best[0]=1;
+    left_best[1]=2;
+    left_best[2]=3;
+    right_best[0]=4;
+    right_best[1]=5;
+    right_best[2]=6;
     
-   Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
+   //Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
+
  
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial:"<<lb_best<<endl;
     int node_count =0;
    
     //data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, &lb_best, &left_best,&right_best, &node_count, numNets);
-   
+  
+    
     
     //////parallel logic starts here//
-
-
-    threadParams* Params;
+ 
+///*
+    threadParams* Params = new threadParams;
     data* newNode = new data;
     newNode->blocknum = order[0];
     newNode->parent= NULL;
-    newNode->RightOrLeftList = PARENT;
+    newNode->RightOrLeftList = LEFT_CHILD;
     newNode->runningLBsum = 0;
 	//load Params with an initial value that you use to call the first make tree function
     Params->Parent = newNode;
@@ -105,18 +113,18 @@ int main(int argc, const char * argv[]) {
     Params->numNets = numNets;
     Params->Blocks = Blocks;
 	//etc, etc...
-
+    cout<<order[0];
 	pthread_t BBthread;
 	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)Params);
 
 	//this will get main() to wait for parallel process to complete
 	pthread_join(BBthread, NULL);
     
-    
+   
     
     //ends here///
     
-    
+    //*/
     
     
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);

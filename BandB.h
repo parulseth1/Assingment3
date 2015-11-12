@@ -77,6 +77,7 @@ struct data{
     data* left; //left child
     data* right; //right child
     data* parent; //parent (for head this is obviously null)
+    bool prune = false;
 };
 
 
