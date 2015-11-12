@@ -13,7 +13,7 @@
 #include <pthread.h>
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 pthread_barrier_t barr;
-int* lb_best_global;
+//int* lb_best_global;
 
 void* makeTreeParallel(void* ptr) {
     pthread_mutex_init(&mutex1, NULL);
@@ -22,12 +22,12 @@ void* makeTreeParallel(void* ptr) {
     
     
     threadParams* Params = (threadParams*) ptr;
-    //pthread_barrier_init(&barr, NULL, 2^(Params->numOfBlocks-1) -2);
+    pthread_barrier_init(&barr, NULL, 2^(Params->numOfBlocks) -2);
     data* Parent = Params->Parent;
     int index = Params->index;
     int* order = Params->order;
     int numOfBlocks = Params->numOfBlocks;
-    lb_best_global = Params->lb_best; // global	
+    int* lb_best_global = Params->lb_best; // global	
     int** left = Params->left; // global
     int** right = Params->right; // global
     int* count_node = Params->count_node; // global 
@@ -35,12 +35,13 @@ void* makeTreeParallel(void* ptr) {
     vector<block> Blocks = Params->Blocks;
     
     pthread_mutex_lock(&mutex1);
-        if (index >= numOfBlocks) {
+        if (index == numOfBlocks) {
         int k = 0;
         int l = 0;
         data* newnode = Parent;
             cout << "lb:" << newnode->runningLBsum;
-            if (newnode->runningLBsum < *lb_best_global) {
+            int lb = calculateCO(Parent, Blocks, numNets);
+            if (lb < *lb_best_global) {
                 *lb_best_global = newnode->runningLBsum;
                 cout << endl << "lbBest" << *lb_best_global << endl;
                 while (newnode != NULL) {
@@ -121,6 +122,7 @@ void* makeTreeParallel(void* ptr) {
         pthread_t BBthread;
 	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)LeftChildParams);
         Params->Parent->left = LeftChildParams->Parent;
+        
     }
     
 
@@ -143,6 +145,7 @@ void* makeTreeParallel(void* ptr) {
         newNode_right->left = NULL;
         newNode_right->right = NULL;
         Params->Parent->right = newNode_right;
+        //pthread_exit(NULL);
         return NULL;
     }
     data* node_right = newNode_right;
@@ -157,6 +160,8 @@ void* makeTreeParallel(void* ptr) {
         newNode_right->left = NULL;
         newNode_right->right = NULL;
         Params->Parent->right = newNode_right;
+        
+        //pthread_exit(NULL);
         return NULL;
     }
     
@@ -176,12 +181,13 @@ void* makeTreeParallel(void* ptr) {
 
 
     if(rightcount<= numOfBlocks/2 && newNode_right->runningLBsum < *lb_best_global){
-        pthread_t BBthread;
-	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)RightChildParams);
+        
+	void* ret = makeTreeParallel((void*)RightChildParams);
         Params->Parent->right = RightChildParams->Parent;
     }
     
-    //pthread_barrier_wait(&barr);
+    
+    pthread_barrier_wait(&barr);
     return NULL;
 }
 
