@@ -65,7 +65,7 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bandbpartition: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bandbpartition ${OBJECTFILES} ${LDLIBSOPTIONS} -lX11 -lXft -lfontconfig
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bandbpartition ${OBJECTFILES} ${LDLIBSOPTIONS} -lX11 -lXft -lfontconfig -lpthread
 
 ${OBJECTDIR}/Drawing.o: Drawing.cpp 
 	${MKDIR} -p ${OBJECTDIR}

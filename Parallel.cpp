@@ -13,9 +13,12 @@
 #include <pthread.h>
 pthread_mutex_t mutex1;
 
+
 void* makeTreeParallel(void* ptr) {
-    threadParams* Params = (threadParams*) ptr;
     
+    pthread_mutex_init(&mutex1, NULL);
+    
+    threadParams* Params = (threadParams*) ptr;
     data* Parent = Params->Parent;
     int index = Params->index;
     int* order = Params->order;

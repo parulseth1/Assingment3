@@ -51,7 +51,7 @@
           <commandLine>-Wall -Wextra -pedantic -DX11 -std=c++11 -I/usr/include/freetype2</commandLine>
         </ccTool>
         <linkerTool>
-          <commandLine>-lX11 -lXft -lfontconfig</commandLine>
+          <commandLine>-lX11 -lXft -lfontconfig -lpthread</commandLine>
         </linkerTool>
       </compileType>
       <item path="BandB.h" ex="false" tool="3" flavor2="0">

@@ -17,6 +17,7 @@
 #include <string.h>
 #include "Parallel.h"
 #include "Drawing.h"
+#include <pthread.h>
 //#define FILENAME "/home/parul/NetBeansProjects/BandBPartition/cct4.txt"
 
 #define PARENT (-1)
@@ -72,16 +73,49 @@ int main(int argc, const char * argv[]) {
     
    
     
-   //Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
+   Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
  
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial:"<<lb_best<<endl;
-    int leftcount =0;
-    int rightcount=0;
     int node_count =0;
+   
+    //data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, &lb_best, &left_best,&right_best, &node_count, numNets);
+   
     
-    data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, &lb_best, &left_best,&right_best, &node_count, numNets);
-    cout<<"lb"<<lb_best;
+    //////parallel logic starts here//
+
+
+    threadParams* Params;
+    data* newNode = new data;
+    newNode->blocknum = order[0];
+    newNode->parent= NULL;
+    newNode->RightOrLeftList = PARENT;
+    newNode->runningLBsum = 0;
+	//load Params with an initial value that you use to call the first make tree function
+    Params->Parent = newNode;
+    Params->index = 1;
+    Params->order = order;
+    Params->numOfBlocks = numOfBlocks;
+    Params->lb_best = &lb_best;
+    Params->left = &left_best;
+    Params->right = &right_best;
+    Params->count_node = &node_count;
+    Params->numNets = numNets;
+	//etc, etc...
+
+	pthread_t BBthread;
+	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)Params);
+
+	//this will get main() to wait for parallel process to complete
+	pthread_join(BBthread, NULL);
+    
+    
+    
+    //ends here///
+    
+    
+    
+    
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"LB after tree"<<lb_best<<endl;
 
@@ -94,9 +128,9 @@ int main(int argc, const char * argv[]) {
         delete[] Nets;
     }
     
-    cout<<numOfBlocks<<"::"<<newNode;
+    //cout<<numOfBlocks<<"::"<<newNode;
     
-    DrawOnScreen(newNode, numOfBlocks);
+    //DrawOnScreen(newNode, numOfBlocks);
     
     cout<<"Done"<<endl;
     return 0;
