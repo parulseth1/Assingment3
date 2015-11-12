@@ -11,7 +11,7 @@
 #define RIGHT_CHILD 2
 #define PARENT (-1)
 #include <pthread.h>
-pthread_mutex_t mutex1;
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
 
 void* makeTreeParallel(void* ptr) {
@@ -117,9 +117,9 @@ void* makeTreeParallel(void* ptr) {
     int lb_right = calculateCO(newNode, Blocks, numNets);
     newNode_right->runningLBsum = lb_right;
     
-    pthread_mutex_lock(&mutex1);
+    //pthread_mutex_lock(&mutex1);
     *count_node = *count_node + 1; // cant figure this one out
-    pthread_mutex_unlock(&mutex1);
+    //pthread_mutex_unlock(&mutex1);
     
     //cout<<"Left-"<<order[index]<<endl;
     if (newNode_right->runningLBsum >= *lb_best) {
