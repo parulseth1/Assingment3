@@ -118,6 +118,7 @@ int main(int argc, const char * argv[]) {
 	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)Params);
 
 	//this will get main() to wait for parallel process to complete
+        
 	pthread_join(BBthread, NULL);
     
    
@@ -125,6 +126,34 @@ int main(int argc, const char * argv[]) {
     //ends here///
     
     //*/
+    
+    /*
+    threadParams1* Params = new threadParams1;
+    data* newNode = new data;
+    newNode->blocknum = order[0];
+    newNode->parent= NULL;
+    newNode->RightOrLeftList = LEFT_CHILD;
+    newNode->runningLBsum = 0;
+	//load Params with an initial value that you use to call the first make tree function
+    Params->node = newNode;
+    Params->index = 1;
+    Params->order = order;
+    Params->numOfBlocks = numOfBlocks;
+    Params->lb_best = 0;
+	//etc, etc...
+    //cout<<order[0]<<en;
+	pthread_t BBthread;
+	pthread_create(&BBthread, NULL, makeParallel, (void*)Params);
+
+	//this will get main() to wait for parallel process to complete
+        
+	pthread_join(BBthread, NULL);
+    
+   
+    
+    //ends here///
+    
+    */
     
     
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);

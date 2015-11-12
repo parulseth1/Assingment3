@@ -85,6 +85,8 @@ struct data{
 
 
 
+
+
 struct threadParams {
 	//all the parameters that were being passed into the makeTree function HAVE to be put in here, with the exact same data-type
 	vector<block> Blocks; 
@@ -106,5 +108,14 @@ struct LBandNode{ //couldnt think of any other name, plus coming close to St.Geo
 	int LB;
 };
 
+
+
+struct threadParams1{
+    int numOfBlocks;
+    int index;
+    int* order;
+    int* lb_best;
+    data* node;
+};
 #endif	/* PLACER_H */
 
