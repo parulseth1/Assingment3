@@ -74,8 +74,7 @@ void* makeTreeParallel(void* ptr) {
     pthread_mutex_unlock(&mutex1);
     //cout<<"Left-"<<order[index]<<endl;
     if (newNode->runningLBsum >= *lb_best) {
-        newNode->left = NULL;
-        newNode->right = NULL;
+        Params->Parent->left = NULL;
         //return NULL;// dont make the thread// instead of null.
     }
     data* node = newNode;
@@ -87,10 +86,11 @@ void* makeTreeParallel(void* ptr) {
         node = node->parent;
     }
     if (leftcount > numOfBlocks / 2) {
-        newNode->left = NULL;
-        newNode->right = NULL;
+        Params->Parent->left =  NULL;
+        
         //return NULL;// dont make the thread// instead of null.
     }
+
     
     LeftChildParams->Parent = newNode;
     LeftChildParams->index = index + 1;
@@ -101,6 +101,13 @@ void* makeTreeParallel(void* ptr) {
     LeftChildParams->right = right;
     LeftChildParams->count_node = count_node;
     LeftChildParams->numNets = numNets;
+    LeftChildParams->Blocks = Blocks;
+    
+    if(leftcount<= numOfBlocks/2 && newNode->runningLBsum < *lb_best){
+        pthread_t BBthread;
+        Params->Parent->left = newNode;
+	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)LeftChildParams);
+    }
 
 
     data* newNode_right = new data;
@@ -116,8 +123,7 @@ void* makeTreeParallel(void* ptr) {
     
     //cout<<"Left-"<<order[index]<<endl;
     if (newNode_right->runningLBsum >= *lb_best) {
-        newNode_right->left = NULL;
-        newNode_right->right = NULL;
+        Params->Parent->left = newNode;
         return NULL;
     }
     data* node_right = newNode_right;
@@ -129,8 +135,7 @@ void* makeTreeParallel(void* ptr) {
         node_right = node_right->parent;
     }
     if (rightcount > numOfBlocks / 2) {
-        newNode_right->left = NULL;
-        newNode_right->right = NULL;
+        Params->Parent->right = NULL;
         return NULL;
     }
     
@@ -144,10 +149,14 @@ void* makeTreeParallel(void* ptr) {
     RightChildParams->right = right;
     RightChildParams->count_node = count_node;
     RightChildParams->numNets = numNets;
+    RightChildParams->Blocks = Blocks;
     
-    void* ret = makeTreeParallel((void*)RightChildParams);
-
-
+    if(rightcount<= numOfBlocks/2 && newNode_right->runningLBsum < *lb_best){
+        pthread_t BBthread;
+        Params->Parent->right = newNode_right;
+	void* ret = makeTreeParallel((void*)RightChildParams);
+    }
+    
     return NULL;
 }
 
