@@ -90,6 +90,7 @@ int main(int argc, const char * argv[]) {
     
    Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
 
+    
  
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial:"<<lb_best<<endl;
@@ -127,9 +128,6 @@ int main(int argc, const char * argv[]) {
     //cout<<order[0];
 	pthread_t BBthread;
 	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)Params);
-
-	//this will get main() to wait for parallel process to complete
-        
 	pthread_join(BBthread, NULL);
        //data* newNode =  
    
@@ -154,4 +152,3 @@ int main(int argc, const char * argv[]) {
     cout<<"Done"<<endl;
     return 0;
 }
-
