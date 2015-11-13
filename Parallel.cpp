@@ -22,7 +22,7 @@ void* makeTreeParallel(void* ptr) {
     
     
     threadParams* Params = (threadParams*) ptr;
-    //pthread_barrier_init(&barr, NULL, 2^(Params->numOfBlocks) -2);
+    //pthread_barrier_init(&barr, NULL, 2^(Params->numOfBlocks-1));
     data* Parent = Params->Parent;
     int index = Params->index;
     int* order = Params->order;
@@ -114,12 +114,11 @@ void* makeTreeParallel(void* ptr) {
     LeftChildParams->count_node = count_node;
     LeftChildParams->numNets = numNets;
     LeftChildParams->Blocks = Blocks;
-    
+    pthread_t BBthread;
     if(leftcount<= numOfBlocks/2 && newNode->runningLBsum < *lb_best_global){
-        pthread_t BBthread;
 	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)LeftChildParams);
         Params->Parent->left = LeftChildParams->Parent;
-        pthread_join(BBthread, NULL);
+        
         
     }
     
@@ -185,7 +184,10 @@ void* makeTreeParallel(void* ptr) {
         Params->Parent->right = RightChildParams->Parent;
     }
     
-    
+    //void *ret;
+    if(leftcount<= numOfBlocks/2 && newNode->runningLBsum < *lb_best_global){
+        pthread_join(BBthread, NULL);  
+    }
     //pthread_barrier_wait(&barr);
     return NULL;
 }

@@ -29,8 +29,8 @@ using namespace::std;
 
 int main(int argc, const char * argv[]) {
     
-    /*
-     if (argc < 3) {
+    
+    if (argc < 3) {
         cout << "Usage : ./bandbpartition -u <File name>" << endl;
         return 1;
     }
@@ -46,10 +46,10 @@ int main(int argc, const char * argv[]) {
         return 1;
     }
     
-    */
     
-    char* FILENAME = new char[strlen(argv[1]) + 1];
-    strcpy(FILENAME, argv[1]);
+    
+    char* FILENAME = new char[strlen(argv[2]) + 1];
+    strcpy(FILENAME, argv[2]);
     cout<<FILENAME<<endl;
     
     vector<block> Blocks;
@@ -95,18 +95,19 @@ int main(int argc, const char * argv[]) {
     cout<<"lb of initial:"<<lb_best<<endl;
     int node_count =0;
     
-    
-    //if( caseDirection == 1){
-    data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, &lb_best, &left_best,&right_best, &node_count, numNets);
-    //}
+    data* newNode = new data;
+    if( caseDirection == 1){
+    newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, &lb_best, &left_best,&right_best, &node_count, numNets);
+    }
    
     
     //////parallel logic starts here//
  
-/*
-    //if(caseDirection ==2){
+
+    if(caseDirection ==2){
     threadParams* Params = new threadParams;
-    data* newNode = new data;
+    //data* newNode = new data;
+    node_count = 1;
     newNode->blocknum = order[0];
     newNode->parent= NULL;
     newNode->RightOrLeftList = LEFT_CHILD;
@@ -132,8 +133,8 @@ int main(int argc, const char * argv[]) {
 	pthread_join(BBthread, NULL);
        //data* newNode =  
    
-    //}
-*/
+   }
+
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"LB after tree"<<lb_best<<endl;
 
@@ -148,7 +149,7 @@ int main(int argc, const char * argv[]) {
     
     //cout<<numOfBlocks<<"::"<<newNode;
     
-    DrawOnScreen(newNode, numOfBlocks);
+    //DrawOnScreen(newNode, numOfBlocks);
     
     cout<<"Done"<<endl;
     return 0;

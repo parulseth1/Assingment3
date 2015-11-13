@@ -10,14 +10,8 @@
 #define LEFT_CHILD 1
 #define RIGHT_CHILD 2
 #define PARENT (-1)
-//#define PRUNE 
-// first we got to make function to make initial solution
-// get the LB function/// how????????
-// then define the ordering.
 
 
-//// sorting based on highest number nets connected to/////
-int sol_reached;
 void sorting(vector<block> Blocks, int** order) {
     int size = Blocks.size();
     for (int i = 0; i < size; i++) {
@@ -305,7 +299,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         newNode->RightOrLeftList=LEFT_CHILD;
         newNode->runningLBsum = 0;
         *count_node = *count_node+1;
-        cout<<"PP-"<<order[index]<<endl;
+        //cout<<"PP-"<<order[index]<<endl;
     }
     //left adds, right subtracts, but replace with whatever necessary
     else if (LeftOrRightChild == LEFT_CHILD){
@@ -315,7 +309,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         newNode->runningLBsum =lb;
         *count_node = *count_node+1;
         //(*Parent)->left = newNode;
-        cout<<"Left-"<<newNode->blocknum<<endl;
+        //cout<<"Left-"<<newNode->blocknum<<endl;
         if(newNode->runningLBsum >= *lb_best){
             newNode->left = NULL;
             newNode->right = NULL;
@@ -344,7 +338,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         int lb =calculateCO(newNode,Blocks,numNets);
         newNode->runningLBsum =lb;
         //(*Parent)->right =newNode;
-        cout<<"right-"<<newNode->blocknum<<endl;
+        //cout<<"right-"<<newNode->blocknum<<endl;
         *count_node = *count_node+1;
         
        // cout<<"rightcount"<<*right_count<<endl;
