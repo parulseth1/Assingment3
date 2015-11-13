@@ -14,6 +14,6 @@
 #define	PARALLEL_H
 
 void* makeTreeParallel(void* ptr);
-void* makeParallel(void* ptr);
+
 #endif	/* PARALLEL_H */
 

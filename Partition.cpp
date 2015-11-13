@@ -295,7 +295,6 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         
         //calculate final LB compare with LB_best and put the solution in left and right;
         return NULL;
-        
     }
     data* newNode = new data; //the new node is created here
     newNode->parent = Parent;
@@ -306,7 +305,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         newNode->RightOrLeftList=LEFT_CHILD;
         newNode->runningLBsum = 0;
         *count_node = *count_node+1;
-        //cout<<"PP-"<<order[index]<<endl;
+        cout<<"PP-"<<order[index]<<endl;
     }
     //left adds, right subtracts, but replace with whatever necessary
     else if (LeftOrRightChild == LEFT_CHILD){
@@ -316,7 +315,7 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
         newNode->runningLBsum =lb;
         *count_node = *count_node+1;
         //(*Parent)->left = newNode;
-        //cout<<"Left-"<<order[index]<<endl;
+        cout<<"Left-"<<newNode->blocknum<<endl;
         if(newNode->runningLBsum >= *lb_best){
             newNode->left = NULL;
             newNode->right = NULL;
@@ -340,12 +339,12 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
     }
     else if (LeftOrRightChild == RIGHT_CHILD){
         newNode->blocknum = order[index];
-        newNode->blocknum = order[index];
+        //newNode->blocknum = order[index];
         newNode->RightOrLeftList = LeftOrRightChild;
         int lb =calculateCO(newNode,Blocks,numNets);
         newNode->runningLBsum =lb;
         //(*Parent)->right =newNode;
-        //cout<<"right-"<<order[index]<<endl;
+        cout<<"right-"<<newNode->blocknum<<endl;
         *count_node = *count_node+1;
         
        // cout<<"rightcount"<<*right_count<<endl;
@@ -375,8 +374,8 @@ data* makeTree(vector<block> Blocks, int index, data* Parent, int LeftOrRightChi
     
     //set up the pointers,
     
-    data* leftnode = makeTree(Blocks, index+1, newNode, LEFT_CHILD, order, numOfBlocks,lb_best, left, right, count_node, numNets); //the left child is a new node, that is recursively created by the maketree function
-    data* rightnode = makeTree(Blocks, index+1, newNode, RIGHT_CHILD, order, numOfBlocks,lb_best,left, right, count_node, numNets); //similarly for the right child
+    newNode->left = makeTree(Blocks, index+1, newNode, LEFT_CHILD, order, numOfBlocks,lb_best, left, right, count_node, numNets); //the left child is a new node, that is recursively created by the maketree function
+    newNode->right = makeTree(Blocks, index+1, newNode, RIGHT_CHILD, order, numOfBlocks,lb_best,left, right, count_node, numNets); //similarly for the right child
     
     
     return newNode;

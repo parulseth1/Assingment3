@@ -22,7 +22,7 @@ void* makeTreeParallel(void* ptr) {
     
     
     threadParams* Params = (threadParams*) ptr;
-    pthread_barrier_init(&barr, NULL, 2^(Params->numOfBlocks) -2);
+    //pthread_barrier_init(&barr, NULL, 2^(Params->numOfBlocks) -2);
     data* Parent = Params->Parent;
     int index = Params->index;
     int* order = Params->order;
@@ -39,15 +39,17 @@ void* makeTreeParallel(void* ptr) {
         int k = 0;
         int l = 0;
         data* newnode = Parent;
-            cout << "lb:" << newnode->runningLBsum;
+            //cout << "lb:" << newnode->runningLBsum;
             int lb = calculateCO(Parent, Blocks, numNets);
             if (lb < *lb_best_global) {
                 *lb_best_global = newnode->runningLBsum;
-                cout << endl << "lbBest" << *lb_best_global << endl;
+                //cout << endl << "lbBest" << *lb_best_global << endl;
                 while (newnode != NULL) {
+                    //cout<<"while stuck"<<endl;
                     if (newnode->RightOrLeftList == LEFT_CHILD) {
                         (*right)[k] = newnode->blocknum;
                         k++;
+                        
                     }
                     if (newnode->RightOrLeftList == RIGHT_CHILD) {
                         (*left)[l] = newnode->blocknum;
@@ -57,19 +59,15 @@ void* makeTreeParallel(void* ptr) {
 
                 }
             }
-
-           
-        
-        
+        pthread_mutex_unlock(&mutex1);
         return NULL;
-
     }
     
    pthread_mutex_unlock(&mutex1);
     
 
     //data* newNode_right = new data;
-    cout<<"index-"<<index<<endl;
+    //cout<<"index-"<<index<<endl;
     pthread_t leftChildThread;
     threadParams* LeftChildParams = new threadParams;
     data* newNode = new data;
@@ -80,8 +78,6 @@ void* makeTreeParallel(void* ptr) {
     newNode->runningLBsum = lb;
     pthread_mutex_lock(&mutex1);
     *count_node = *count_node + 1; 
-    cout<<"Left-"<<order[index]<<endl;
-    cout<<"lb for left nodes"<<newNode->runningLBsum<<endl;// cant figure this one out
     pthread_mutex_unlock(&mutex1);
     
     if (newNode->runningLBsum >= *lb_best_global) {
@@ -103,6 +99,7 @@ void* makeTreeParallel(void* ptr) {
         newNode->right =NULL;
         Params->Parent->left = newNode;
         
+        
         //return NULL;// dont make the thread// instead of null.
     }
 
@@ -122,6 +119,7 @@ void* makeTreeParallel(void* ptr) {
         pthread_t BBthread;
 	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)LeftChildParams);
         Params->Parent->left = LeftChildParams->Parent;
+        pthread_join(BBthread, NULL);
         
     }
     
@@ -136,8 +134,7 @@ void* makeTreeParallel(void* ptr) {
     
     pthread_mutex_lock(&mutex1);
     *count_node = *count_node + 1; 
-     cout<<"right-"<<order[index]<<endl;
-    cout<<"lb for right nodes"<<newNode_right->runningLBsum<<endl;// cant figure this one out
+
     pthread_mutex_unlock(&mutex1);
     
    
@@ -151,8 +148,10 @@ void* makeTreeParallel(void* ptr) {
     data* node_right = newNode_right;
     int rightcount = 0;
     while (node_right != NULL) {
+        //cout<<"while "
         if (node_right->RightOrLeftList == RIGHT_CHILD) {
             rightcount++;
+            //cout<<rightcount<<endl;
         }
         node_right = node_right->parent;
     }
@@ -187,58 +186,8 @@ void* makeTreeParallel(void* ptr) {
     }
     
     
-    pthread_barrier_wait(&barr);
+    //pthread_barrier_wait(&barr);
     return NULL;
 }
 
 
-void* makeParallel(void* ptr){
-    
-    threadParams1* Params = (threadParams1*) ptr;
-    int* order = Params->order;
-    int index = Params->index;
-    data* node = Params->node;
-    int num = Params->numOfBlocks;
-    int* lb = Params->lb_best;
-    pthread_mutex_lock(&mutex1);
-    if(index >= num){
-        //lb = lb +Params->Parent->blocknum;
-        cout<<"lb"<<Params->node->blocknum;
-        return NULL;
-    }
-    pthread_mutex_unlock(&mutex1);
-    
-    //*lb = *lb +Params->order[Params->index];
-    //int lb =0;
-    data* newnode_left = new data;
-    newnode_left->parent = node;
-    newnode_left->RightOrLeftList = LEFT_CHILD;
-    newnode_left->blocknum = order[index];
-    threadParams1* LeftChildParams = new threadParams1;
-    LeftChildParams->node = newnode_left;
-    LeftChildParams->index = index + 1;
-    LeftChildParams->order = order;
-    LeftChildParams->numOfBlocks = num;
-    LeftChildParams->lb_best = lb;
-    pthread_t BBthread_left;
-    pthread_create(&BBthread_left, NULL, makeTreeParallel, (void*)LeftChildParams);
-    //Params->node->left = newnode_left;
-        
-    
-    
-    data* newnode_right = new data;
-    newnode_right->parent = node;
-    newnode_right->RightOrLeftList = RIGHT_CHILD;
-    newnode_right->blocknum = order[index];
-    //*lb = *lb +Params->order[Params->index];
-    threadParams1* RightChildParams = new threadParams1;
-    RightChildParams->node = newnode_right;
-    RightChildParams->index = index + 1;
-    RightChildParams->order = order;
-    RightChildParams->numOfBlocks =num;
-    RightChildParams->lb_best = lb;
-    void* ret = makeParallel((void*)RightChildParams);
-    //Params->node->right = newnode_right;
-    
-    return NULL;
-}

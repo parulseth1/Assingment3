@@ -29,11 +29,24 @@ using namespace::std;
 
 int main(int argc, const char * argv[]) {
     
-    
-     if (argc < 2) {
-        cout << "Usage : ./BandBPartition <File name>" << endl;
+    /*
+     if (argc < 3) {
+        cout << "Usage : ./bandbpartition -u <File name>" << endl;
         return 1;
     }
+    int caseDirection;
+    if (strcmp(argv[1], "-s") == 0) {
+        //unidirectional case
+        caseDirection = 1;
+    } else if (strcmp(argv[1], "-p") == 0) {
+        //bidirectional case
+        caseDirection = 2;
+    } else {
+        cout << "wrong argument" << endl;
+        return 1;
+    }
+    
+    */
     
     char* FILENAME = new char[strlen(argv[1]) + 1];
     strcpy(FILENAME, argv[1]);
@@ -74,27 +87,24 @@ int main(int argc, const char * argv[]) {
     int lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial before swap :"<<lb_best<<endl;
     
-    left_best[0]=1;
-    left_best[1]=2;
-    left_best[2]=3;
-    right_best[0]=4;
-    right_best[1]=5;
-    right_best[2]=6;
     
-   //Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
+   Initial_solution_swap(Nets, &left_best, &right_best, numOfBlocks, Blocks);
 
  
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"lb of initial:"<<lb_best<<endl;
     int node_count =0;
-   
-    //data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, &lb_best, &left_best,&right_best, &node_count, numNets);
-  
     
+    
+    //if( caseDirection == 1){
+    data* newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, &lb_best, &left_best,&right_best, &node_count, numNets);
+    //}
+   
     
     //////parallel logic starts here//
  
-///*
+/*
+    //if(caseDirection ==2){
     threadParams* Params = new threadParams;
     data* newNode = new data;
     newNode->blocknum = order[0];
@@ -113,54 +123,22 @@ int main(int argc, const char * argv[]) {
     Params->numNets = numNets;
     Params->Blocks = Blocks;
 	//etc, etc...
-    cout<<order[0];
+    //cout<<order[0];
 	pthread_t BBthread;
 	pthread_create(&BBthread, NULL, makeTreeParallel, (void*)Params);
 
 	//this will get main() to wait for parallel process to complete
         
 	pthread_join(BBthread, NULL);
-    
+       //data* newNode =  
    
-    
-    //ends here///
-    
-    //*/
-    
-    /*
-    threadParams1* Params = new threadParams1;
-    data* newNode = new data;
-    newNode->blocknum = order[0];
-    newNode->parent= NULL;
-    newNode->RightOrLeftList = LEFT_CHILD;
-    newNode->runningLBsum = 0;
-	//load Params with an initial value that you use to call the first make tree function
-    Params->node = newNode;
-    Params->index = 1;
-    Params->order = order;
-    Params->numOfBlocks = numOfBlocks;
-    Params->lb_best = 0;
-	//etc, etc...
-    //cout<<order[0]<<en;
-	pthread_t BBthread;
-	pthread_create(&BBthread, NULL, makeParallel, (void*)Params);
-
-	//this will get main() to wait for parallel process to complete
-        
-	pthread_join(BBthread, NULL);
-    
-   
-    
-    //ends here///
-    
-    */
-    
-    
+    //}
+*/
     lb_best = lowerBound_initial(Nets, left_best, right_best, numNets, numOfBlocks);
     cout<<"LB after tree"<<lb_best<<endl;
 
     cout<<"node visited"<<node_count<<endl;
-
+   // cout<<newNode->left->blocknum<<endl;
     
     
     // keep everything above this.////
@@ -170,7 +148,7 @@ int main(int argc, const char * argv[]) {
     
     //cout<<numOfBlocks<<"::"<<newNode;
     
-    //DrawOnScreen(newNode, numOfBlocks);
+    DrawOnScreen(newNode, numOfBlocks);
     
     cout<<"Done"<<endl;
     return 0;
