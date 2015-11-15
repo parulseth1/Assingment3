@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Assingment3
+PROJECTNAME=BandBPartition
 
 # Active Configuration
 DEFAULTCONF=Debug
