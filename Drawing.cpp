@@ -39,35 +39,13 @@ int Block_HL = 3*circleRadius;
 
 int leftExpanse = 0, rightExpanse = 0, TotalExpanse = 0;
 
-//void calculateExpanse(data* h, int LeftOrRight){
-//    if (LeftOrRight == -1){
-//        //NOP
-//    }
-//    if (LeftOrRight == LEFT){
-//        if (h->left != NULL){
-//            leftExpanse++;
-//            calculateExpanse(h->left, LEFT);
-//        }
-//    }
-//    if (LeftOrRight == RIGHT){
-//        if (h->right != NULL){
-//            rightExpanse++;
-//            calculateExpanse(h->right, RIGHT);
-//        }
-//    } 
-//}
+
 
 int DrawOnScreen(data* _head, int _levels) {
     
     head = _head;
     levels = _levels;
-//    calculateExpanse(head, LEFT);
-//    calculateExpanse(head, RIGHT);
-    
-//    TotalExpanse = leftExpanse + rightExpanse + 1;
-    
-//    PixelsPerLevel = 150;
-//    ScreenSize.x = levels*Block_HL;
+
     ScreenSize.x = pow(2, levels)*circleRadius;
     
     ScreenSize.y = ScreenSize.x/VERTICAL_FACTOR;//(PixelsPerLevel + 2*circleRadius)*levels;
@@ -96,13 +74,13 @@ void drawTree(data* node, int levelAt, int leftOrRight, Point ParentNodeCoords, 
         NodeCircleCenterCoords = NodeCoords;
     }
     else if (leftOrRight == LEFT){
-        NodeCoords.x = ParentNodeCoords.x - pow(2, levels - levelAt - 2)*circleRadius;
+        NodeCoords.x = ParentNodeCoords.x - pow(2, levels - levelAt - 1)*circleRadius;
         NodeCoords.y = ParentNodeCoords.y - PixelsPerLevel - 2*circleRadius;
         NodeCircleCenterCoords.x = NodeCoords.x;// + circleRadius;
         NodeCircleCenterCoords.y = NodeCoords.y;
     }
     else if (leftOrRight == RIGHT){
-        NodeCoords.x = ParentNodeCoords.x + pow(2, levels - levelAt - 2)*circleRadius;
+        NodeCoords.x = ParentNodeCoords.x + pow(2, levels - levelAt - 1)*circleRadius;
         NodeCoords.y = ParentNodeCoords.y - PixelsPerLevel - 2*circleRadius;
         NodeCircleCenterCoords.x = NodeCoords.x;// - circleRadius;
         NodeCircleCenterCoords.y = NodeCoords.y;
@@ -117,14 +95,7 @@ void drawTree(data* node, int levelAt, int leftOrRight, Point ParentNodeCoords, 
     delete[] text;
     
     //draw the lines
-//    if (leftOrRight == LEFT){
-//        //there is a parent for this 
-//        drawline(NodeCircleCenterCoords.x, NodeCircleCenterCoords.y, ParentNodeCircleCenterCoords.x , ParentNodeCircleCenterCoords.y);
-//    }
-//    else if (leftOrRight == RIGHT){
-//        //there is a parent for this 
-//        drawline(NodeCircleCenterCoords.x, NodeCircleCenterCoords.y, ParentNodeCircleCenterCoords.x , ParentNodeCircleCenterCoords.y);
-//    }
+
     
     if (leftOrRight != -1){
         drawline(NodeCircleCenterCoords.x, NodeCircleCenterCoords.y, ParentNodeCircleCenterCoords.x , ParentNodeCircleCenterCoords.y);
