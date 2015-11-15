@@ -141,13 +141,15 @@ int main(int argc, const char * argv[]) {
     
     
     // keep everything above this.////
-    if (Nets){
-        delete[] Nets;
-    }
+    
     
     //cout<<numOfBlocks<<"::"<<newNode;
     
-    //DrawOnScreen(newNode, numOfBlocks);
+    DrawOnScreen(newNode, numOfBlocks);
+    
+    if (Nets){
+        delete[] Nets;
+    }
     
     cout<<"Done"<<endl;
     return 0;

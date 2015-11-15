@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=bandbpartition
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/bandbpartition
+CND_ARTIFACT_NAME_Debug=assingment3
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/assingment3
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=bandbpartition.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/bandbpartition.tar
+CND_PACKAGE_NAME_Debug=assingment3.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/assingment3.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=bandbpartition
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/bandbpartition
+CND_ARTIFACT_NAME_Release=assingment3
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/assingment3
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=bandbpartition.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/bandbpartition.tar
+CND_PACKAGE_NAME_Release=assingment3.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/assingment3.tar
 #
 # include compiler specific variables
 #
