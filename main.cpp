@@ -98,6 +98,7 @@ int main(int argc, const char * argv[]) {
     
     data* newNode = new data;
     if( caseDirection == 1){
+        cout<<"running serial \n";
     newNode = makeTree(Blocks, 0, NULL, PARENT, order, numOfBlocks, &lb_best, &left_best,&right_best, &node_count, numNets);
     }
    
@@ -106,6 +107,7 @@ int main(int argc, const char * argv[]) {
  
 
     if(caseDirection ==2){
+        cout<<"running parallel\n";
     threadParams* Params = new threadParams;
     //data* newNode = new data;
     node_count = 1;
