@@ -2,11 +2,14 @@
 
 #include <iostream>
 #include <cfloat>
+#include <math.h>
 
 using namespace::std;
 
 #define LEFT 1
 #define RIGHT 2
+
+#define VERTICAL_FACTOR 5
 
 struct Point{
     int x;
@@ -29,16 +32,24 @@ int levels = 0;
 int circleRadius = 350;
 Point ScreenSize(10000, 10000);
 Point Parent(0, 0);
+Point ParentCircle(0, 0);
 int PixelsPerLevel = 0;
 int initDistanceBetweenNodes = 0;
+int Block_HL = 3*circleRadius;
+
+int leftExpanse = 0, rightExpanse = 0, TotalExpanse = 0;
+
+
 
 int DrawOnScreen(data* _head, int _levels) {
     
     head = _head;
     levels = _levels;
-    PixelsPerLevel = 150;
-    ScreenSize.x = levels*2*circleRadius;
-    ScreenSize.y = (PixelsPerLevel + 2*circleRadius)*levels;
+
+    ScreenSize.x = pow(2, levels)*circleRadius;
+    
+    ScreenSize.y = ScreenSize.x/VERTICAL_FACTOR;//(PixelsPerLevel + 2*circleRadius)*levels;
+    PixelsPerLevel = ScreenSize.y/(levels);
     Parent.x = ScreenSize.x/2;
     Parent.y = ScreenSize.y - circleRadius;
     init_graphics("Branch And Bound", WHITE);
@@ -53,41 +64,50 @@ int DrawOnScreen(data* _head, int _levels) {
 }
 
 
-void drawTree(data* node, int levelAt, int leftOrRight, Point ParentNodeCoords){
+void drawTree(data* node, int levelAt, int leftOrRight, Point ParentNodeCoords, Point ParentNodeCircleCenterCoords){
     //draw this node
     Point NodeCoords(0, 0);
+    Point NodeCircleCenterCoords(0, 0);
     if (leftOrRight == -1){
         //head node
         NodeCoords = ParentNodeCoords;
+        NodeCircleCenterCoords = NodeCoords;
     }
     else if (leftOrRight == LEFT){
-        NodeCoords.x = ParentNodeCoords.x - (circleRadius*2 - levelAt*10);
+        NodeCoords.x = ParentNodeCoords.x - pow(2, levels - levelAt - 1)*circleRadius;
         NodeCoords.y = ParentNodeCoords.y - PixelsPerLevel - 2*circleRadius;
+        NodeCircleCenterCoords.x = NodeCoords.x;// + circleRadius;
+        NodeCircleCenterCoords.y = NodeCoords.y;
     }
     else if (leftOrRight == RIGHT){
-        NodeCoords.x = ParentNodeCoords.x + (circleRadius*2 - levelAt*10);
+        NodeCoords.x = ParentNodeCoords.x + pow(2, levels - levelAt - 1)*circleRadius;
         NodeCoords.y = ParentNodeCoords.y - PixelsPerLevel - 2*circleRadius;
+        NodeCircleCenterCoords.x = NodeCoords.x;// - circleRadius;
+        NodeCircleCenterCoords.y = NodeCoords.y;
+
     }
     
     char* text = new char[10];
 //    sprintf(text, "%d", NodeCoords.x);
     sprintf(text, "%d", node->blocknum);
-    drawCircle(NodeCoords, circleRadius);
-    drawtext(NodeCoords.x, NodeCoords.y, text, FLT_MAX, FLT_MAX);
+    drawCircle(NodeCircleCenterCoords, circleRadius);
+    drawtext(NodeCircleCenterCoords.x, NodeCircleCenterCoords.y, text, FLT_MAX, FLT_MAX);
     delete[] text;
     
     //draw the lines
+
+    
     if (leftOrRight != -1){
-        //there is a parent for this 
-        drawline(NodeCoords.x, NodeCoords.y, ParentNodeCoords.x, ParentNodeCoords.y);
+        drawline(NodeCircleCenterCoords.x, NodeCircleCenterCoords.y, ParentNodeCircleCenterCoords.x , ParentNodeCircleCenterCoords.y);
+        //drawline(NodeCircleCenterCoords.x, NodeCircleCenterCoords.y, ParentNodeCoords.x , ParentNodeCoords.y);
     }
     
     
     if (node->left != NULL){
-        drawTree(node->left, levelAt+1, LEFT, NodeCoords);
+        drawTree(node->left, levelAt+1, LEFT, NodeCoords, NodeCircleCenterCoords);
     }
     if (node->right != NULL){
-        drawTree(node->right, levelAt+1, RIGHT, NodeCoords);
+        drawTree(node->right, levelAt+1, RIGHT, NodeCoords, NodeCircleCenterCoords);
     }
     
 }
@@ -103,5 +123,5 @@ void drawscreen() {
     setfontsize(8);
     initDistanceBetweenNodes = (2+levels)*circleRadius;
     
-    drawTree(head, 0,-1, Parent);
+    drawTree(head, 0,-1, Parent, ParentCircle);
 }

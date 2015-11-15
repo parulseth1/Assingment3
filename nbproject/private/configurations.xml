@@ -24,18 +24,22 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
+
           <runcommandpicklistitem>"${OUTPUT_PATH}" /home/parul/NetBeansProjects/BandBPartition/cct0.txt</runcommandpicklistitem>
+
           <runcommandpicklistitem>"${OUTPUT_PATH}" -s /home/parul/NetBeansProjects/BandBPartition/cct3.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -p /home/parul/NetBeansProjects/BandBPartition/cct0.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -p /home/parul/NetBeansProjects/BandBPartition/cct1.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -p /home/parul/NetBeansProjects/BandBPartition/cct2.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -p /home/parul/NetBeansProjects/BandBPartition/cct3.txt</runcommandpicklistitem>
+
           <runcommandpicklistitem>"${OUTPUT_PATH}" -p /home/parul/NetBeansProjects/BandBPartition/cct4.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -s /home/parul/NetBeansProjects/BandBPartition/cct0.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -s /home/parul/NetBeansProjects/BandBPartition/cct1.txt</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" -s /home/parul/NetBeansProjects/BandBPartition/cct2.txt</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}" -s /home/parul/NetBeansProjects/BandBPartition/cct2.txt</runcommand>
+
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
