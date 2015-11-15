@@ -14,7 +14,7 @@
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 void* makeTreeParallel(void* ptr) {
-	cout<<"inside the tree"<<endl;
+	//cout<<"inside the tree"<<endl;
 	pthread_mutex_init(&mutex1, NULL);
 	threadParams* Params = (threadParams*) ptr;
 	//pthread_barrier_init(&barr, NULL, 2^(Params->numOfBlocks-1));
@@ -40,7 +40,7 @@ void* makeTreeParallel(void* ptr) {
                 *lb_best_global = newnode->runningLBsum;
                 cout << endl << "lbBest" << *lb_best_global << endl;
                	 while (newnode != NULL) {
-                    cout<<"while stuck"<<endl;
+                    //cout<<"while stuck"<<endl;
                     if (newnode->RightOrLeftList == LEFT_CHILD) {
                         (*right)[k] = newnode->blocknum;
                         k++;
@@ -61,7 +61,7 @@ void* makeTreeParallel(void* ptr) {
  	 pthread_mutex_unlock(&mutex1);
 
 
-	cout<<"index-"<<index<<endl;
+	//cout<<"index-"<<index<<endl;
 	    threadParams* LeftChildParams = new threadParams;
 	    data* newNode = new data;
 	    newNode->parent = Parent;
@@ -73,13 +73,13 @@ void* makeTreeParallel(void* ptr) {
 		// mutex
 	    pthread_mutex_lock(&mutex1);
 	    *count_node = *count_node + 1;
-	     cout<<"Left-"<<newNode->blocknum<<endl;
+	     //cout<<"Left-"<<newNode->blocknum<<endl;
 	    if (newNode->runningLBsum >= *lb_best_global) {
 		newNode->left = NULL;
 		newNode->right =NULL;
 		newNode->prune = true;
 		Params->Parent->left = newNode;
-                cout<<"node that got prune left"<<newNode->blocknum;
+                //cout<<"node that got prune left"<<newNode->blocknum;
 	    }
 	    pthread_mutex_unlock(&mutex1);
 		// mutex unlocked
@@ -98,7 +98,7 @@ void* makeTreeParallel(void* ptr) {
 		newNode->right =NULL;
 		newNode->prune = true;
 		Params->Parent->left = newNode;
-                cout<<"node that got prune left"<<newNode->blocknum;
+                //cout<<"node that got prune left"<<newNode->blocknum;
 		
 	    }
 
@@ -127,13 +127,13 @@ void* makeTreeParallel(void* ptr) {
 		// mutex
 	pthread_mutex_lock(&mutex1);
 	    *count_node = *count_node + 1; 
-	    cout<<"right-"<<newNode_right->blocknum<<endl;
+	    //cout<<"right-"<<newNode_right->blocknum<<endl;
 	    if (newNode_right->runningLBsum >= *lb_best_global) {
 		newNode_right->left = NULL;
 		newNode_right->right = NULL;
 		newNode_right->prune = true;
 		Params->Parent->right = newNode_right;
-                cout<<"node that got prune right"<<newNode_right->blocknum;
+                //cout<<"node that got prune right"<<newNode_right->blocknum;
 		
 	    }
 	    pthread_mutex_unlock(&mutex1);
@@ -154,7 +154,7 @@ void* makeTreeParallel(void* ptr) {
        		 newNode_right->right = NULL;
         	newNode_right->prune = true;
        		Params->Parent->right = newNode_right;
-                cout<<"node that got prune right"<<newNode_right->blocknum;
+                //cout<<"node that got prune right"<<newNode_right->blocknum;
     }
     
     threadParams* RightChildParams = new threadParams; 
@@ -174,11 +174,17 @@ void* makeTreeParallel(void* ptr) {
     RightChildParams->Blocks = Blocks;
     
     pthread_t BBthread;
-    if(newNode->prune != true){
-	cout<<"inside the condition"<<endl;
+    if(newNode->prune != true && index%5 ==0){
+	//cout<<"inside the condition"<<endl;
        pthread_create(&BBthread, NULL, makeTreeParallel, (void*)LeftChildParams);
         Params->Parent->left = LeftChildParams->Parent;
-        //pthread_join(BBthread, NULL);
+        pthread_join(BBthread, NULL);
+    }
+        if(newNode->prune != true && index%5 !=0){
+	//cout<<"inside the condition"<<endl;
+       pthread_create(&BBthread, NULL, makeTreeParallel, (void*)LeftChildParams);
+        Params->Parent->left = LeftChildParams->Parent;
+        pthread_join(BBthread, NULL);
     }
   
     //pthread_mutex_lock(&mutex1);
@@ -189,9 +195,9 @@ void* makeTreeParallel(void* ptr) {
     }
     
 
-    if(newNode->prune != true){
-        pthread_join(BBthread, NULL);
-    }
+//    if(newNode->prune != true){
+//        pthread_join(BBthread, NULL);
+//    }
 
 	return NULL;
 

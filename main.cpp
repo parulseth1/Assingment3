@@ -147,7 +147,7 @@ int main(int argc, const char * argv[]) {
     
     //cout<<numOfBlocks<<"::"<<newNode;
     
-    //DrawOnScreen(newNode, numOfBlocks);
+    DrawOnScreen(newNode, numOfBlocks);
     
     cout<<"Done"<<endl;
     return 0;
