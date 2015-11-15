@@ -89,7 +89,9 @@ void drawTree(data* node, int levelAt, int leftOrRight, Point ParentNodeCoords, 
     
     char* text = new char[10];
 //    sprintf(text, "%d", NodeCoords.x);
+    //cout<<""
     sprintf(text, "%d", node->blocknum);
+    
     drawCircle(NodeCircleCenterCoords, circleRadius);
     drawtext(NodeCircleCenterCoords.x, NodeCircleCenterCoords.y, text, FLT_MAX, FLT_MAX);
     delete[] text;
